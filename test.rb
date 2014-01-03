@@ -2,22 +2,32 @@ require 'sqlite3'
 require 'sequel'
 require 'themoviedb'
 
-DB = Sequel.sqlite('./moveingon.db')
+DB = Sequel.sqlite('./movieingon.db')
 
-Tmdb::Api.key("f6343dcd785009de63b392bc4ac98e89")
-movie = Tmdb::Movie.detail(562)
-cast = Tmdb::Movie.casts(562)
-crew = Tmdb::Movie.crew(562)
-
-puts movie.original_title
-puts cast
-puts crew
-
-crew.each do |crewman|
-  if crewman["department"] == "Writing" || crewman["job"] == "Producer"
-    puts "#{crewman["name"]} is a #{crewman["job"]}"
-  end
+class Person < Sequel::Model(:persons)
+  many_to_many :actor, :class => :Movie, :right_key => :movie_id, :join_table => :actors
+  many_to_many :writer, :class => :Movie, :right_key => :movie_id, :join_table => :writers
+  many_to_many :producer, :class => :Movie, :right_key => :movie_id, :join_table => :producers
+  many_to_many :director, :class => :Movie, :right_key => :movie_id, :join_table => :directors
 end
-cast.each do |actor|
-  puts "-#{actor["id"]}-"
+
+class Movie < Sequel::Model
+  many_to_many :actor, :class => :Person, :right_key => :person_id, :join_table => :actors
+  many_to_many :writer, :class => :Person, :right_key => :person_id, :join_table => :writers
+  many_to_many :producer, :class => :Person, :right_key => :person_id, :join_table => :producers
+  many_to_many :director, :class => :Person, :right_key => :person_id, :join_table => :directors
+end
+
+Movie.all.each do |movie|
+  p movie
+  p movie.actor
+  p movie.writer
+  p movie.producer
+  p movie.director
+end
+Person.all.each do |person|
+  p person
+  p person.actor
+  p person.writer
+  p person.producer
 end

@@ -7,11 +7,26 @@ require 'themoviedb'
 
 DB = Sequel.sqlite('./movieingon.db')
 
+class Person < Sequel::Model(:persons)
+  many_to_many :actor, :class => :Movie, :right_key => :movie_id, :join_table => :actors
+  many_to_many :writer, :class => :Movie, :right_key => :movie_id, :join_table => :writers
+  many_to_many :producer, :class => :Movie, :right_key => :movie_id, :join_table => :producers
+  many_to_many :director, :class => :Movie, :right_key => :movie_id, :join_table => :directors
+end
+
+class Movie < Sequel::Model
+  many_to_many :actor, :class => :Person, :right_key => :person_id, :join_table => :actors
+  many_to_many :writer, :class => :Person, :right_key => :person_id, :join_table => :writers
+  many_to_many :producer, :class => :Person, :right_key => :person_id, :join_table => :producers
+  many_to_many :director, :class => :Person, :right_key => :person_id, :join_table => :directors
+end
+
+Person.all
+
 Tmdb::Api.key("f6343dcd785009de63b392bc4ac98e89")
 
 get '/' do
-	@movies = DB[:movie]
-	@actors = DB
+	@movies = Movie.all
 	@title = 'Movies'
 	erb :home
 end

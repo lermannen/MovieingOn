@@ -10,35 +10,27 @@
 <% @movies.each do |movie| %>
 <hr />
   <article>
-    <h1 class="extrapad"><em><%= movie[:title] %></em> (<%= movie[:year] %>)</h3>
+    <h1 class="extrapad"><em><%= movie.title %></em> (<%= movie.year %>)</h3>
     <div class="col-300"><strong>Actors</strong>
-    <ul><% DB["SELECT * FROM actors a JOIN person p ON a.person_id = p.id WHERE a.movie_id = ?", movie[:id]].each do |actor| %>
-      <li><%= actor[:name] %></li>
-    <% end %></ul></div>
-    <div class="col-300"><strong>Actors2</strong>
-    <ul><% DB[:actors].filter(:movie_id => movie[:id]).join(:person, :id => :person_id).each do |actor| %>
+    <ul><% movie.actor.each do |actor| %>
       <li><%= actor[:name] %></li>
     <% end %></ul></div>
     <div class="col-300"><strong>Directors</strong>
-    <ul><% DB["SELECT * FROM directors d JOIN person p ON d.person_id = p.id WHERE d.movie_id = ?", movie[:id]].each do |director| %>
+    <ul><% movie.director.each do |director| %>
       <li><%= director[:name] %></li>
     <% end %></ul>
     <strong>Writers</strong>
-    <ul><% DB["SELECT * FROM writers a JOIN person p ON a.person_id = p.id WHERE a.movie_id = ?", movie[:id]].each do |actor| %>
+    <ul><% movie.writer.each do |actor| %>
       <li><%= actor[:name] %></li>
     <% end %></ul>
     <strong>Producers</strong>
-    <ul><% DB["SELECT * FROM producers a JOIN person p ON a.person_id = p.id WHERE a.movie_id = ?", movie[:id]].each do |actor| %>
+    <ul><% movie.producer.each do |actor| %>
       <li><%= actor[:name] %></li>
     <% end %></ul>
-    <strong>Production companies</strong>
-    <ul><% DB["SELECT * FROM movie_production_company mpc JOIN production_company p ON mpc.production_company_id = p.id WHERE mpc.movie_id = ?", movie[:id]].each do |actor| %>
-      <li><%= actor[:name] %></li>
-    <% end %></ul></div>
     <div class="col-300"><strong>Rating</strong>
     <ul>
-      <li>Movieing On: <%= movie[:movieingonrating]%>.</li>
-      <li>IMDb: <%= movie[:imdbrating]%>.</li>
+      <li>Movieing On: <%= movie.movieingonrating%>.</li>
+      <li>IMDb: <%= movie.imdbrating%>.</li>
     </ul>
     <a href="/<%= movie[:id] %>">[edit]</a>
   </div>
