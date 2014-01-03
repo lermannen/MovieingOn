@@ -1,0 +1,27 @@
+<article>
+	<p><h2>År</h2></p>
+<% @year.each do |year| %>
+	
+		<%= year.year %>
+		<%= year.concerts %><br>	
+
+<% end %>
+</article>	
+<article>
+	<p><h2>Månad</h2></p>
+<% @month.each do |month| %>
+	
+		<%= month.year %>
+		<%= month.concerts %><br>	
+
+<% end %>
+</article>	
+<article>
+	<p><h2>Dag</h2></p>
+<% @day.each do |day| %>
+	
+		<%= day.year %>
+		<%= day.concerts %><br>	
+
+<% end %>
+</article>	
