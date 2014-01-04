@@ -20,12 +20,12 @@
       <li><%= director[:name] %></li>
     <% end %></ul>
     <strong>Writers</strong>
-    <ul><% movie.writer.each do |actor| %>
-      <li><%= actor[:name] %></li>
+    <ul><% movie.writer.each do |writer| %>
+      <li><%= writer[:name] %></li>
     <% end %></ul>
     <strong>Producers</strong>
-    <ul><% movie.producer.each do |actor| %>
-      <li><%= actor[:name] %></li>
+    <ul><% movie.producer.each do |producer| %>
+      <li><%= producer[:name] %></li>
     <% end %></ul>
     <strong>Production companies</strong>
     <ul><% movie.productioncompanies.each do |company| %>
