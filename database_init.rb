@@ -3,18 +3,21 @@ require 'sequel'
 
 DB = Sequel.sqlite('./movieingon.db')
 
-DB.create_table(:person) do
+DB.create_table(:persons) do
   primary_key :id
+  Integer :moviedb_id, :null => false
   String :name, :null => false
 end
 
-DB.create_table(:production_company) do
+DB.create_table(:productioncompanies) do
   primary_key :id
+  Integer :moviedb_id, :null => false
   String :name, :null => false
 end
 
-DB.create_table(:movie) do
+DB.create_table(:movies) do
   primary_key :id
+  Integer :moviedb_id, :null => false
   Integer :year, :null => false
   String :title, :null => false
   String :imdburl, :null => false
@@ -23,26 +26,26 @@ DB.create_table(:movie) do
 end
 
 DB.create_table(:actors) do
-  foreign_key :person_id, :person, :null => false
-  foreign_key :movie_id, :movie, :null => false
+  foreign_key :person_id, :persons, :null => false
+  foreign_key :movie_id, :movies, :null => false
 end
 
 DB.create_table(:writers) do
-  foreign_key :person_id, :person, :null => false
-  foreign_key :movie_id, :movie, :null => false
+  foreign_key :person_id, :persons, :null => false
+  foreign_key :movie_id, :movies, :null => false
 end
 
 DB.create_table(:directors) do
-  foreign_key :person_id, :person, :null => false
-  foreign_key :movie_id, :movie, :null => false
+  foreign_key :person_id, :persons, :null => false
+  foreign_key :movie_id, :movies, :null => false
 end
 
 DB.create_table(:producers) do
-  foreign_key :person_id, :person, :null => false
-  foreign_key :movie_id, :movie, :null => false
+  foreign_key :person_id, :persons, :null => false
+  foreign_key :movie_id, :movies, :null => false
 end
 
-DB.create_table(:movie_production_company) do
-  foreign_key :movie_id, :movie, :null => false
-  foreign_key :production_company_id, :production_company, :null => false
+DB.create_table(:movie_productioncompany) do
+  foreign_key :movie_id, :movies, :null => false
+  foreign_key :productioncompany_id, :productioncompanies, :null => false
 end

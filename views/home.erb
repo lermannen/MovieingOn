@@ -1,7 +1,7 @@
 <section id="add">
   <form action="/" method="post">
     <input type="text" name="movie_id" placeholder="Movie id&hellip;">
-    <input type="text" name="moveingonrating" placeholder="Movieing On-rating&hellip;">
+    <input type="text" name="movieingonrating" placeholder="Movieing On-rating&hellip;">
     <input type="text" name="imdbrating" placeholder="IMDB-rating&hellip;">
     <input type="submit" value="Save movie!">
   </form>
@@ -27,6 +27,10 @@
     <ul><% movie.producer.each do |actor| %>
       <li><%= actor[:name] %></li>
     <% end %></ul>
+    <strong>Production companies</strong>
+    <ul><% movie.productioncompanies.each do |company| %>
+      <li><%= company.name %></li>
+    <% end %></ul></div>
     <div class="col-300"><strong>Rating</strong>
     <ul>
       <li>Movieing On: <%= movie.movieingonrating%>.</li>
