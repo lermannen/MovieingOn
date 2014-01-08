@@ -29,8 +29,9 @@ class MovieingOn < Sinatra::Base
 	def add_crew(movie_id, created_movie_id)
 		crew = Tmdb::Movie.crew(movie_id)
 		crew.each do |crewman|
+			person = Person.where(:moviedb_id => crewman["id"]).first
+	    
 	    if crewman["department"] == "Writing"
-	      person = Person.where(:moviedb_id => crewman["id"]).first
 	      if !person.nil?
 	        created_movie_id.add_writer(person[:id])
 	      else
@@ -40,7 +41,6 @@ class MovieingOn < Sinatra::Base
 		      )
 		    end
 	    elsif crewman["job"] == "Producer"
-	      person = Person.where(:moviedb_id => crewman["id"]).first
 	      if !person.nil?
 	        created_movie_id.add_producer(person[:id])
 	      else
@@ -50,7 +50,6 @@ class MovieingOn < Sinatra::Base
 		      )
 		    end
 	    elsif crewman["job"] == "Director"
-	      person = Person.where(:moviedb_id => crewman["id"]).first
 	      if !person.nil?
 	        created_movie_id.add_director(person[:id])
 	      else
@@ -63,6 +62,18 @@ class MovieingOn < Sinatra::Base
 	  end
 	end
 
+	def add_production_company(created_movie_id, company)
+		prodco = Productioncompany.where(:moviedb_id => company["id"]).first
+      if !prodco.nil?
+        created_movie_id.add_productioncompany(prodco[:id])
+      else
+		    created_movie_id.add_productioncompany(
+		    	:name => company["name"],
+		    	:moviedb_id => company["id"]
+		    )
+		  end
+	end
+
 	def add_movie_to_database(movie_id, movieingonrating, imdbrating)
 		movie = Tmdb::Movie.detail(movie_id)
 
@@ -70,31 +81,26 @@ class MovieingOn < Sinatra::Base
 	    current_movie = Movie.filter(:moviedb_id => movie.id).first
 	    fetched_movie_id = current_movie[:moviedb_id] unless current_movie.nil?
 	  end
-	  if fetched_movie_id.nil?
-			created_movie_id = Movie.create do |m|
-				m.moviedb_id = movie.id
-				m.title = movie.title
-				m.year = movie.release_date
-				m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
-				m.movieingonrating = movieingonrating
-				m.imdbrating = imdbrating
-			end
 
-			movie.production_companies.each do |company|
-		    prodco = Productioncompany.where(:moviedb_id => company["id"]).first
-	      if !prodco.nil?
-	        created_movie_id.add_productioncompany(prodco[:id])
-	      else
-			    created_movie_id.add_productioncompany(
-			    	:name => company["name"],
-			    	:moviedb_id => company["id"]
-			    )
+	  DB.transaction do
+		  if fetched_movie_id.nil?
+				created_movie_id = Movie.create do |m|
+					m.moviedb_id = movie.id
+					m.title = movie.title
+					m.year = movie.release_date
+					m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
+					m.movieingonrating = movieingonrating
+					m.imdbrating = imdbrating
+				end
+
+				movie.production_companies.each do |company|
+			    add_production_company(created_movie_id, company)
 			  end
-		  end
 
-		  add_cast(movie_id, created_movie_id)
-		  add_crew(movie_id, created_movie_id)
-		  
+			  add_cast(movie_id, created_movie_id)
+			  add_crew(movie_id, created_movie_id)
+
+			end
 		end
 	end
 
@@ -122,7 +128,11 @@ class MovieingOn < Sinatra::Base
 	end
 
 	post '/' do
-		add_movie_to_database(params[:movie_id], params[:movieingonrating], params[:imdbrating])
+		add_movie_to_database(
+			params[:movie_id], 
+			params[:movieingonrating], 
+			params[:imdbrating]
+		)
 
 		redirect '/admin'
 	end
