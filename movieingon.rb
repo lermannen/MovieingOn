@@ -11,6 +11,7 @@ require_relative 'model'
 
 class MovieingOn < Sinatra::Base
 	def add_cast(movie_id, created_movie_id)
+		configuration = Tmdb::Configuration.new
 		cast = Tmdb::Movie.casts(movie_id, created_movie_id)
 
 		cast.each do |actor|
@@ -20,13 +21,15 @@ class MovieingOn < Sinatra::Base
 	      else
 	        created_movie_id.add_actor(
 	          :name => actor["name"],
-	          :moviedb_id => actor["id"]
+	          :moviedb_id => actor["id"],
+	          :profile_url => "#{configuration.base_url}/w185/#{actor["profile_path"]}"
 	        )
 	      end
 	    end
 	end
 
 	def add_crew(movie_id, created_movie_id)
+		configuration = Tmdb::Configuration.new
 		crew = Tmdb::Movie.crew(movie_id)
 		crew.each do |crewman|
 			person = Person.where(:moviedb_id => crewman["id"]).first
@@ -37,7 +40,8 @@ class MovieingOn < Sinatra::Base
 	      else
 		      created_movie_id.add_writer(
 		      	:name => crewman["name"],
-		      	:moviedb_id => crewman["id"]
+		      	:moviedb_id => crewman["id"],
+		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
 		      )
 		    end
 	    elsif crewman["job"] == "Producer"
@@ -46,7 +50,8 @@ class MovieingOn < Sinatra::Base
 	      else
 		      created_movie_id.add_producer(
 		      	:name => crewman["name"],
-		      	:moviedb_id => crewman["id"]
+		      	:moviedb_id => crewman["id"],
+		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
 		      )
 		    end
 	    elsif crewman["job"] == "Director"
@@ -55,7 +60,8 @@ class MovieingOn < Sinatra::Base
 	      else
 	      	created_movie_id.add_director(
 		      	:name => crewman["name"],
-		      	:moviedb_id => crewman["id"]
+		      	:moviedb_id => crewman["id"],
+		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
 		      )
 	      end
 	    end
@@ -74,8 +80,21 @@ class MovieingOn < Sinatra::Base
 		  end
 	end
 
+	def add_genre(created_movie_id, genre)
+		genre_id = Genre.where(:moviedb_id => genre["id"]).first
+      if !genre_id.nil?
+        created_movie_id.add_genre(genre_id[:id])
+      else
+		    created_movie_id.add_genre(
+		    	:name => genre["name"],
+		    	:moviedb_id => genre["id"]
+		    )
+		  end
+	end
+
 	def add_movie_to_database(movie_id, movieingonrating, imdbrating)
 		movie = Tmdb::Movie.detail(movie_id)
+		configuration = Tmdb::Configuration.new
 
 		if !movie.nil?
 	    current_movie = Movie.filter(:moviedb_id => movie.id).first
@@ -91,10 +110,15 @@ class MovieingOn < Sinatra::Base
 					m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
 					m.movieingonrating = movieingonrating
 					m.imdbrating = imdbrating
+					m.poster_url = "#{configuration.base_url}/w185/#{movie.poster_path}"
 				end
 
 				movie.production_companies.each do |company|
 			    add_production_company(created_movie_id, company)
+			  end
+
+			  movie.genres.each do |genre|
+			  	add_genre(created_movie_id, genre)
 			  end
 
 			  add_cast(movie_id, created_movie_id)
@@ -125,6 +149,18 @@ class MovieingOn < Sinatra::Base
 		@movies = Movie.all
 		@title = 'Movies'
 		erb :admin
+	end
+
+	get '/toprated' do
+		@movies = Movie.select_map([:movieingonrating, :title, :year]).sort.reverse
+		@title = 'Movies - top rated'
+		erb :top_rated
+	end
+
+	get '/lowestrated' do
+		@movies = Movie.select_map([:movieingonrating, :title, :year]).sort
+		@title = 'Movies - lowerst rated'
+		erb :lowest_rated
 	end
 
 	post '/' do

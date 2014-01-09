@@ -11,9 +11,14 @@
 <hr />
   <article>
     <h1 class="extrapad"><em><%= movie.title %></em> (<%= movie.year %>)</h3>
+    <img src="<%= movie.poster_url %>">
+    <div class="col-300"><strong>Genres</strong>
+    <ul><% movie.genre.each do |genre| %>
+      <li><%= genre[:name] %></li>
+    <% end %></ul></div>
     <div class="col-300"><strong>Actors</strong>
     <ul><% movie.actor.each do |actor| %>
-      <li><%= actor[:name] %></li>
+      <li><%= actor[:name] %><img src="<%= actor[:profile_url]%>"></li>
     <% end %></ul></div>
     <div class="col-300"><strong>Directors</strong>
     <ul><% movie.director.each do |director| %>

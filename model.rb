@@ -16,8 +16,13 @@ class Movie < Sequel::Model
   many_to_many :producer, :class => :Person, :right_key => :person_id, :join_table => :producers
   many_to_many :director, :class => :Person, :right_key => :person_id, :join_table => :directors
   many_to_many :productioncompanies, :join_table => :movie_productioncompany
+  many_to_many :genre, :join_table => :movie_genre
 end
 
 class Productioncompany < Sequel::Model
   many_to_many :movie, :class => :Movie, :join_table => :movie_productioncompany
+end
+
+class Genre < Sequel::Model
+  many_to_many :movie, :class => :Movie, :join_table => :movie_genre
 end

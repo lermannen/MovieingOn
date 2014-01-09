@@ -7,9 +7,16 @@ DB.create_table(:persons) do
   primary_key :id
   Integer :moviedb_id, :null => false
   String :name, :null => false
+  String :profile_url
 end
 
 DB.create_table(:productioncompanies) do
+  primary_key :id
+  Integer :moviedb_id, :null => false
+  String :name, :null => false
+end
+
+DB.create_table(:genres) do
   primary_key :id
   Integer :moviedb_id, :null => false
   String :name, :null => false
@@ -23,6 +30,7 @@ DB.create_table(:movies) do
   String :imdburl, :null => false
   Float :movieingonrating, :null => false
   Float :imdbrating, :null => false
+  String :poster_url
 end
 
 DB.create_table(:actors) do
@@ -48,4 +56,9 @@ end
 DB.create_table(:movie_productioncompany) do
   foreign_key :movie_id, :movies, :null => false
   foreign_key :productioncompany_id, :productioncompanies, :null => false
+end
+
+DB.create_table(:movie_genre) do
+  foreign_key :movie_id, :movies, :null => false
+  foreign_key :genre_id, :genres, :null => false
 end
