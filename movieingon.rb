@@ -10,21 +10,27 @@ require 'themoviedb'
 require_relative 'model'
 
 class MovieingOn < Sinatra::Base
-	def add_cast(movie_id, created_movie_id)
+	def add_actor(actor, movie)
 		configuration = Tmdb::Configuration.new
+		
+		person = Person.first(:moviedb_id => actor["id"])
+
+	  if person
+	    movie.add_actor(person[:id])
+	  else
+	    movie.add_actor(
+	      :name => actor["name"],
+	      :moviedb_id => actor["id"],
+	      :profile_url => "#{configuration.base_url}w185#{actor["profile_path"]}"
+	    )
+	  end
+	end
+
+	def add_cast(movie_id, created_movie_id)
 		cast = Tmdb::Movie.casts(movie_id, created_movie_id)
 
 		cast.each do |actor|
-	      person = Person.where(:moviedb_id => actor["id"]).first
-	      if !person.nil?
-	        created_movie_id.add_actor(person[:id])
-	      else
-	        created_movie_id.add_actor(
-	          :name => actor["name"],
-	          :moviedb_id => actor["id"],
-	          :profile_url => "#{configuration.base_url}/w185/#{actor["profile_path"]}"
-	        )
-	      end
+	      add_actor(actor, created_movie_id)
 	    end
 	end
 
@@ -41,7 +47,7 @@ class MovieingOn < Sinatra::Base
 		      created_movie_id.add_writer(
 		      	:name => crewman["name"],
 		      	:moviedb_id => crewman["id"],
-		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
+		      	:profile_url => "#{configuration.base_url}w185#{crewman["profile_path"]}"
 		      )
 		    end
 	    elsif crewman["job"] == "Producer"
@@ -51,7 +57,7 @@ class MovieingOn < Sinatra::Base
 		      created_movie_id.add_producer(
 		      	:name => crewman["name"],
 		      	:moviedb_id => crewman["id"],
-		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
+		      	:profile_url => "#{configuration.base_url}w185#{crewman["profile_path"]}"
 		      )
 		    end
 	    elsif crewman["job"] == "Director"
@@ -61,7 +67,7 @@ class MovieingOn < Sinatra::Base
 	      	created_movie_id.add_director(
 		      	:name => crewman["name"],
 		      	:moviedb_id => crewman["id"],
-		      	:profile_url => "#{configuration.base_url}/w185/#{crewman["profile_path"]}"
+		      	:profile_url => "#{configuration.base_url}w185#{crewman["profile_path"]}"
 		      )
 	      end
 	    end
@@ -92,7 +98,7 @@ class MovieingOn < Sinatra::Base
 		  end
 	end
 
-	def add_movie_to_database(movie_id, movieingonrating, imdbrating)
+	def add_movie_to_database(movie_id, movieingonrating, imdbrating, episode)
 		movie = Tmdb::Movie.detail(movie_id)
 		configuration = Tmdb::Configuration.new
 
@@ -110,7 +116,8 @@ class MovieingOn < Sinatra::Base
 					m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
 					m.movieingonrating = movieingonrating
 					m.imdbrating = imdbrating
-					m.poster_url = "#{configuration.base_url}/w185/#{movie.poster_path}"
+					m.poster_url = "#{configuration.base_url}w185#{movie.poster_path}"
+					m.episode = episode
 				end
 
 				movie.production_companies.each do |company|
@@ -161,7 +168,8 @@ class MovieingOn < Sinatra::Base
 		add_movie_to_database(
 			params[:movie_id],
 			params[:movieingonrating],
-			params[:imdbrating]
+			params[:imdbrating],
+			params[:episode]
 		)
 
 		redirect '/admin'

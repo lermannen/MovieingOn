@@ -30,6 +30,7 @@ DB.create_table(:movies) do
   String :imdburl, :null => false
   Float :movieingonrating, :null => false
   Float :imdbrating, :null => false
+  Integer :episode, :null => false
   String :poster_url
 end
 

@@ -1,45 +1,45 @@
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-    <h1>Movieing On Statistics</h1>
-    <p>Movieing On, the CSICON network's very own about movies from 1999 or earlier, was launched in April of 2012. Since then, we've covered XXX-COUNT TOTAL MOVIES-XXX in as many episodes. In fact, we've covered so many movies on <a href="http://www.csicon.net/mo/">the show</a> that interesting links and connections have begun to develop. The same director might direct more than one movie, the same actor might appear in three movies and so on. This website is dedicated to finding those links.</p>
-    <hr />
-    <h3>The Leaderboard</h3>
-      <table class="table table-hover">
-      <tr>
-        <td>Top actor</td>
-        <td>Name Namingson</td>
-        <td>3</td>
-      </tr>
-      <tr>
-        <td>Top director</td>
-        <td>Name Namingson</td>
-        <td>4</td>
-      </tr>
-      <tr>
-        <td>Top studio</td>
-        <td>Paramount Pictures</td>
-        <td>5</td>
-      </tr>
-      <tr>
-        <td>Top year</td>
-        <td>1984</td>
-        <td>8</td>
-      </tr>
-      </table>
-    <hr />
-    <h4>The following actors have appeared in more than one movie:</h4>
-      <table class="table table-hover">
-        <% Array(@actors.sort.reverse).each do |count, hash| %>
-          <tr>
-          <% hash.each do |array| %>
-            <td><%= array[:actor] %></td>
-            <td><em><%= array[:movies] %></em></td>
-            <td><%= count %></td>
-            </tr>
-          <% end %>
-        <% end %>
-      </table>
-  </div>
-</div>
+<hr />
+<h3>The Leaderboard</h3>
+<table class="table table-hover">
+  <tr>
+    <td>Top actor</td>
+    <td>Name Namingson</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>Top director</td>
+    <td>Name Namingson</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Top studio</td>
+    <td>Paramount Pictures</td>
+    <td>5</td>
+  </tr>
+  <tr>
+    <td>Top year</td>
+    <td>1984</td>
+    <td>8</td>
+  </tr>
+  <tr class="success">
+    <td>Top rated movie</td>
+    <td><em>Citizen Kane</em></td>
+    <td>9.25</td>
+  </tr>
+  <tr class="danger">
+    <td>Lowest rated movie</td>
+    <td><em>The Holy Mountain</em></td>
+    <td>1.66</td>
+  </tr>
+</table>
+<hr />
 
-
+<h4>The following actors have appeared in more than one movie:</h4>
+  <table class="table table-hover">
+  <% Array(@actors.sort.reverse).each do |count, hash| %>
+  <tr><% hash.each do |array| %>
+    <td><%= array[:actor] %></td>
+    <td><em><%= array[:movies] %></em></td>
+    <td><%= count %></td>
+  </tr><% end %>
+<% end %></table>
