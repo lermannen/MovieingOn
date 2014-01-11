@@ -1,48 +1,73 @@
 <section id="add">
-  <form action="/" method="post">
-    <input type="text" name="movie_id" placeholder="Movie id&hellip;">
-    <input type="text" name="movieingonrating" placeholder="Movieing On-rating&hellip;">
-    <input type="text" name="imdbrating" placeholder="IMDB-rating&hellip;">
-    <input type="submit" value="Save movie!">
+  <form action="/" method="post" class="form-inline" role="form">
+    <div class="form-group">
+      <input type="text" name="movie_id" placeholder="Movie ID">
+      <input type="text" name="movieingonrating" placeholder="Movieing On rating">
+      <input type="text" name="imdbrating" placeholder="IMDB rating">
+      <input type="submit" class="btn btn-default" value="Save movie">
+    </div>
   </form>
 </section>
-
 <% @movies.each do |movie| %>
+
+<!-- MOVIE DIVIDER -->
+
 <hr />
   <article>
-    <h1 class="extrapad"><em><%= movie.title %></em> (<%= movie.year %>)</h3>
-    <img src="<%= movie.poster_url %>">
-    <div class="col-300"><strong>Genres</strong>
-    <ul><% movie.genre.each do |genre| %>
-      <li><%= genre[:name] %></li>
-    <% end %></ul></div>
-    <div class="col-300"><strong>Actors</strong>
-    <ul><% movie.actor.each do |actor| %>
-      <li><%= actor[:name] %><img src="<%= actor[:profile_url]%>"></li>
-    <% end %></ul></div>
-    <div class="col-300"><strong>Directors</strong>
+    <h3><em><%= movie.title %></em> <small>(<%= movie.year %>)</small></h3>
+    <p><% movie.genre.each do |genre| %><%= genre[:name] %> <% end %></p>
+
+  <div class="clearfix">
+  </div>
+
+  <div class="col-md-4">
+    <strong>Actors</strong>
+    <table class="table table-condensed">
+    <% movie.actor.each do |actor| %>
+    <tr>
+      <td><img src="<%= actor[:profile_url]%>" height="20"></td>
+      <td><%= actor[:name] %></td>
+    </tr>
+    <% end %>
+   </table>
+  </div>
+
+  <div class="col-md-4">
+    <strong>Directors</strong>
     <ul><% movie.director.each do |director| %>
-      <li><%= director[:name] %></li>
-    <% end %></ul>
+      <li><%= director[:name] %></li><% end %>
+    </ul>
+
     <strong>Writers</strong>
     <ul><% movie.writer.each do |writer| %>
-      <li><%= writer[:name] %></li>
-    <% end %></ul>
+      <li><%= writer[:name] %></li><% end %>
+    </ul>
+
     <strong>Producers</strong>
     <ul><% movie.producer.each do |producer| %>
-      <li><%= producer[:name] %></li>
-    <% end %></ul>
+      <li><%= producer[:name] %></li><% end %>
+    </ul>
+
     <strong>Production companies</strong>
     <ul><% movie.productioncompanies.each do |company| %>
-      <li><%= company.name %></li>
-    <% end %></ul></div>
-    <div class="col-300"><strong>Rating</strong>
+      <li><%= company.name %></li><% end %>
+    </ul>
+
+    <strong>Rating</strong>
     <ul>
       <li>Movieing On: <%= movie.movieingonrating%>.</li>
       <li>IMDb: <%= movie.imdbrating%>.</li>
     </ul>
-    <a href="/<%= movie[:id] %>">[edit]</a>
   </div>
-    <div class="clear"></div>
+
+
+  <div class="col-md-4">
+    <p><img class="img-thumbnail center-block" src="<%= movie.poster_url %>" width="200"></p>
+    <a href="/<%= movie[:id] %>" class="btn btn-default btn-block">Edit</a>
+  </div>
+
+  <div class="clearfix">
+  </div>
+
   </article>
 <% end %>

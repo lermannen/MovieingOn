@@ -3,19 +3,37 @@
 <head>
   <meta charset="utf8">
   <title><%= @title + ' | Movieing On' %></title>
-  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic|Ubuntu:400,500,700,400italic,500italic,700italic' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="http://movieing-on.com/css/bootstrap.min.css">
-<link rel="stylesheet" href="http://movieing-on.com/css/bootstrap-theme.min.css">
-
+  <link rel="stylesheet" href="http://movieing-on.com/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://movieing-on.com/css/bootstrap-theme.min.css">
 </head>
 <body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <nav class="navbar navbar-default navbar-top" role="navbar">
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/rated">Ratings</a>
+          </li>
+          <li>
+            <a href="/admin">Admin</a>
+          </li>
+        </ul>
+      </nav>
+      <h3>Movieing On Statistics Website!</h3>
+      <p><em>Movieing On</em>, the CSICON network's very own show about movies from 1999 or earlier, was launched in April of 2012. Since then, we've covered XXX-COUNT TOTAL MOVIES-XXX in as many episodes. In fact, we've covered so many movies on <a href="http://www.csicon.net/mo/">the show</a> that a bunch of interesting links and connections between the movies have begun to develop. This website is dedicated to finding those links.</p>
 
-  <div id="main">
-    <%= yield %>
+<%= yield %>
+
+      <hr />
+      <p><small>
+        &copy; 2014 <a href="http://www.csicon.net/" title="CSICON">CSICON</a> and <a href="http://www.gl0d.com">The Gl0d Group</a>.
+      </small></p>
+    </div>
   </div>
-
-  <footer>
-    <p><small>CSICON stuff...</small></p>
-  </footer>
+</div>
 </body>
 </html>

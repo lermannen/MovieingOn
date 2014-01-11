@@ -33,7 +33,7 @@ class MovieingOn < Sinatra::Base
 		crew = Tmdb::Movie.crew(movie_id)
 		crew.each do |crewman|
 			person = Person.where(:moviedb_id => crewman["id"]).first
-	    
+
 	    if crewman["department"] == "Writing"
 	      if !person.nil?
 	        created_movie_id.add_writer(person[:id])
@@ -151,22 +151,16 @@ class MovieingOn < Sinatra::Base
 		erb :admin
 	end
 
-	get '/toprated' do
-		@movies = Movie.select_map([:movieingonrating, :title, :year]).sort.reverse
-		@title = 'Movies - top rated'
-		erb :top_rated
-	end
-
-	get '/lowestrated' do
-		@movies = Movie.select_map([:movieingonrating, :title, :year]).sort
-		@title = 'Movies - lowerst rated'
-		erb :lowest_rated
+	get '/rated' do
+		@movies = Movie.select_map([:movieingonrating, :title, :year, :poster_url]).sort.reverse
+		@title = 'Our ratings'
+		erb :rated
 	end
 
 	post '/' do
 		add_movie_to_database(
-			params[:movie_id], 
-			params[:movieingonrating], 
+			params[:movie_id],
+			params[:movieingonrating],
 			params[:imdbrating]
 		)
 
