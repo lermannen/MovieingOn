@@ -12,7 +12,7 @@ require_relative 'model'
 class MovieingOn < Sinatra::Base
 	def add_actor(actor, movie)
 		configuration = Tmdb::Configuration.new
-		
+
 		person = Person.first(:moviedb_id => actor["id"])
 
 	  if person

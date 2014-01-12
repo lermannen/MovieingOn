@@ -2,32 +2,32 @@
 <h3>The Leaderboard</h3>
 <table class="table table-hover">
   <tr>
-    <td>Top actor</td>
+    <td><span class="glyphicon glyphicon-user"></span> Top actor</td>
     <td>Name Namingson</td>
     <td>3</td>
   </tr>
   <tr>
-    <td>Top director</td>
+    <td><span class="glyphicon glyphicon-user"></span> Top director</td>
     <td>Name Namingson</td>
     <td>4</td>
   </tr>
   <tr>
-    <td>Top studio</td>
+    <td><span class="glyphicon glyphicon-usd"></span> Top studio</td>
     <td>Paramount Pictures</td>
     <td>5</td>
   </tr>
   <tr>
-    <td>Top year</td>
+    <td><span class="glyphicon glyphicon-calendar"></span> Top year</td>
     <td>1984</td>
     <td>8</td>
   </tr>
   <tr class="success">
-    <td>Top rated movie</td>
+    <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie</td>
     <td><em>Citizen Kane</em></td>
     <td>9.25</td>
   </tr>
   <tr class="danger">
-    <td>Lowest rated movie</td>
+    <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie</td>
     <td><em>The Holy Mountain</em></td>
     <td>1.66</td>
   </tr>
@@ -38,8 +38,8 @@
   <table class="table table-hover">
   <% Array(@actors.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
-    <td><%= array[:actor] %></td>
-    <td><em><%= array[:movies] %></em></td>
-    <td><%= count %></td>
+    <td class="col-md-3"><%= array[:actor] %></td>
+    <td class="col-md-8"><small><em><%= array[:movies] %></em></small></td>
+    <td class="col-md-1"><%= count %></td>
   </tr><% end %>
 <% end %></table>
