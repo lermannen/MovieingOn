@@ -136,6 +136,19 @@ class MovieingOn < Sinatra::Base
 	end
 
 	get '/' do
+		@actor = DB[:actors___a].
+		  join(:persons___p, :id=>:person_id).
+		  group_and_count(:p__name).order(:count).last
+		@director = DB[:directors___d].
+		  join(:persons___p, :id=>:person_id).
+		  group_and_count(:p__name).order(:count).last
+		@production_company = DB[:movie_productioncompany___mpc].
+		  join(:productioncompanies___p, :id=>:productioncompany_id).
+		  group_and_count(:p__name).order(:count).last		  
+		@year = Movie.group_and_count(:year).order(:count).last
+		@top_rated = Movie.order(:movieingonrating).last
+		@low_rated = Movie.order(:movieingonrating).first
+
 		actors = Hash.new{|h,k| h[k] = []}
 
 		Person.all.each do |a|
@@ -148,19 +161,24 @@ class MovieingOn < Sinatra::Base
 		end
 
 		@actors = actors
+
 		@title = ''
+		@moviecount = Movie.count
+
 		erb :actors
 	end
 
 	get '/admin' do
 		@movies = Movie.all
 		@title = 'Movies'
+		@moviecount = Movie.count
 		erb :admin
 	end
 
 	get '/rated' do
 		@movies = Movie.select_map([:movieingonrating, :title, :year, :poster_url]).sort.reverse
 		@title = 'Our ratings'
+		@moviecount = Movie.count
 		erb :rated
 	end
 

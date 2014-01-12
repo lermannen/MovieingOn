@@ -3,33 +3,33 @@
 <table class="table table-hover">
   <tr>
     <td><span class="glyphicon glyphicon-user"></span> Top actor</td>
-    <td>Name Namingson</td>
-    <td>3</td>
+    <td><%= @actor[:name] %></td>
+    <td><%= @actor[:count] %></td>
   </tr>
   <tr>
     <td><span class="glyphicon glyphicon-user"></span> Top director</td>
-    <td>Name Namingson</td>
-    <td>4</td>
+    <td><%= @director[:name] %></td>
+    <td><%= @director[:count] %></td>
   </tr>
   <tr>
     <td><span class="glyphicon glyphicon-usd"></span> Top studio</td>
-    <td>Paramount Pictures</td>
-    <td>5</td>
+    <td><%= @production_company[:name] %></td>
+    <td><%= @production_company[:count] %></td>
   </tr>
   <tr>
     <td><span class="glyphicon glyphicon-calendar"></span> Top year</td>
-    <td>1984</td>
-    <td>8</td>
+    <td><%= @year[:year] %></td>
+    <td><%= @year[:count] %></td>
   </tr>
   <tr class="success">
     <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie</td>
-    <td><em>Citizen Kane</em></td>
-    <td>9.25</td>
+    <td><em><%= @top_rated[:title] %></em></td>
+    <td><%= @top_rated[:movieingonrating] %></td>
   </tr>
   <tr class="danger">
     <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie</td>
-    <td><em>The Holy Mountain</em></td>
-    <td>1.66</td>
+    <td><em><%= @low_rated[:title] %></em></td>
+    <td><%= @low_rated[:movieingonrating]%></td>
   </tr>
 </table>
 <hr />

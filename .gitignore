@@ -2,3 +2,7 @@
 .bundle/install.log
 
 movieingon.db
+
+test.rb
+
+*.old
