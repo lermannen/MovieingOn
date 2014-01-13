@@ -19,9 +19,9 @@ class MovieingOn < Sinatra::Base
 	    movie.add_actor(person[:id])
 	  else
 	    movie.add_actor(
-	      :name => actor["name"],
-	      :moviedb_id => actor["id"],
-	      :profile_url => "#{configuration.base_url}w185#{actor["profile_path"]}"
+	      name: actor["name"],
+	      moviedb_id: actor["id"],
+	      profile_url: actor["profile_path"].nil? ? nil : "#{configuration.base_url}w185#{actor["profile_path"]}"
 	    )
 	  end
 	end
@@ -41,7 +41,7 @@ class MovieingOn < Sinatra::Base
 			person = Person.where(:moviedb_id => crewman["id"]).first
 
 	    if crewman["department"] == "Writing"
-	      if !person.nil?
+	      if person
 	        created_movie_id.add_writer(person[:id])
 	      else
 		      created_movie_id.add_writer(
@@ -51,7 +51,7 @@ class MovieingOn < Sinatra::Base
 		      )
 		    end
 	    elsif crewman["job"] == "Producer"
-	      if !person.nil?
+	      if person
 	        created_movie_id.add_producer(person[:id])
 	      else
 		      created_movie_id.add_producer(
@@ -61,7 +61,7 @@ class MovieingOn < Sinatra::Base
 		      )
 		    end
 	    elsif crewman["job"] == "Director"
-	      if !person.nil?
+	      if person
 	        created_movie_id.add_director(person[:id])
 	      else
 	      	created_movie_id.add_director(
@@ -76,7 +76,7 @@ class MovieingOn < Sinatra::Base
 
 	def add_production_company(created_movie_id, company)
 		prodco = Productioncompany.where(:moviedb_id => company["id"]).first
-      if !prodco.nil?
+      if prodco
         created_movie_id.add_productioncompany(prodco[:id])
       else
 		    created_movie_id.add_productioncompany(
@@ -88,7 +88,7 @@ class MovieingOn < Sinatra::Base
 
 	def add_genre(created_movie_id, genre)
 		genre_id = Genre.where(:moviedb_id => genre["id"]).first
-      if !genre_id.nil?
+      if genre_id
         created_movie_id.add_genre(genre_id[:id])
       else
 		    created_movie_id.add_genre(
@@ -102,7 +102,7 @@ class MovieingOn < Sinatra::Base
 		movie = Tmdb::Movie.detail(movie_id)
 		configuration = Tmdb::Configuration.new
 
-		if !movie.nil?
+		if movie
 	    current_movie = Movie.filter(:moviedb_id => movie.id).first
 	    fetched_movie_id = current_movie[:moviedb_id] unless current_movie.nil?
 	  end
@@ -112,7 +112,7 @@ class MovieingOn < Sinatra::Base
 				created_movie_id = Movie.create do |m|
 					m.moviedb_id = movie.id
 					m.title = movie.title
-					m.year = movie.release_date
+					m.year = movie.release_date.slice(0..3)
 					m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
 					m.movieingonrating = movieingonrating
 					m.imdbrating = imdbrating
@@ -136,17 +136,21 @@ class MovieingOn < Sinatra::Base
 	end
 
 	get '/' do
+		@actor_max = actor_max = DB[:actors].group_and_count(:person_id).max(:count)
 		@actor = DB[:actors___a].
 		  join(:persons___p, :id=>:person_id).
-		  group_and_count(:p__name).order(:count).last
+		  group_and_count(:p__name).having(:count => @actor_max).all.map { |actor| actor[:name] }.sort.join(", ")
+		@director_max = DB[:directors].group_and_count(:person_id).max(:count)
 		@director = DB[:directors___d].
 		  join(:persons___p, :id=>:person_id).
-		  group_and_count(:p__name).order(:count).last
+		  group_and_count(:p__name).having(:count => @director_max).all.map { |director| director[:name] }.sort.join(", ")
+		@production_company_max = DB[:movie_productioncompany].group_and_count(:productioncompany_id).max(:count)
 		@production_company = DB[:movie_productioncompany___mpc].
 		  join(:productioncompanies___p, :id=>:productioncompany_id).
-		  group_and_count(:p__name).order(:count).last		  
+		  group_and_count(:p__name).having(:count => @production_company_max).all.map { |production_company| production_company[:name] }.sort.join(", ")
 		@year = Movie.group_and_count(:year).order(:count).last
-		@top_rated = Movie.order(:movieingonrating).last
+		@top_rating = Movie.max(:movieingonrating)
+		@top_rated = Movie.where(:movieingonrating => @top_rating).all
 		@low_rated = Movie.order(:movieingonrating).first
 
 		actors = Hash.new{|h,k| h[k] = []}

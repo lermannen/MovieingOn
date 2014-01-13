@@ -17,7 +17,7 @@
   <article>
     <a name="episode<%= movie.episode %>"></a>
     <h3><span class="glyphicon glyphicon-film"></span> Episode #<%= movie.episode %>: <em><%= movie.title %></em> <small>(<%= movie.year %>)</small></h3>
-    <p><span class="glyphicon glyphicon-list"></span> <% movie.genre.each do |genre| %> <%= genre[:name] %><% end %></p>
+    <p><span class="glyphicon glyphicon-list"></span> <%= movie.genre.map { |genre| genre[:name] }.sort.join(", ") %></p>
 
   <div class="clearfix">
   </div>
@@ -27,7 +27,7 @@
     <table class="table table-condensed">
     <% movie.actor.each do |actor| %>
     <tr>
-      <td><img src="<%= actor[:profile_url]%>" height="20"></td>
+      <td><img src="<%= actor[:profile_url] %>" height="20"></td>
       <td><%= actor[:name] %></td>
     </tr>
     <% end %>
