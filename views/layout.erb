@@ -3,24 +3,25 @@
 <head>
   <meta charset="utf8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
   <title><%= @title + ' | Movieing On' %></title>
-  <link rel="stylesheet" href="http://movieing-on.com/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://movieing-on.com/css/bootstrap-theme.min.css">
-  <script src="http://movieing-on.com/js/bootstrap.js"></script>
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/bootstrap-theme.css">
+  <script src="/js/bootstrap.js"></script>
 </head>
 <body>
 <div class="container">
   <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-      <nav class="navbar navbar-default navbar-top" role="navbar">
-        <ul class="nav navbar-nav">
+    <div class="col-md-12">
+      <nav class="" role="navbar">
+        <ul class="nav nav-pills">
           <li>
             <a href="/">Home</a>
           </li>
           <li>
             <a href="/rated">Ratings</a>
           </li>
-          <li>
+          <li class="pull-right">
             <a href="/admin">Admin</a>
           </li>
         </ul>
@@ -31,7 +32,7 @@
           <h3 class="panel-title">Movieing On Statistics Website</h3>
         </div>
         <div class="panel-body">
-          <em>Movieing On</em>, the CSICON network's very own show about movies from 1999 or earlier, was launched in April of 2012. Since then, we've covered <%= @moviecount %> in as many episodes. In fact, we've covered so many movies on <a href="http://www.csicon.net/mo/">the show</a> that a bunch of interesting links and connections between the movies have begun to develop. This website is dedicated to finding those links.
+          <em>Movieing On</em>, the CSICON network's very own show about movies from 1999 or earlier, was launched in April of 2012. Since then, we've covered <%= @moviecount %> movies in that same amount of episodes. In fact, we've covered so many movies on <a href="http://www.csicon.net/mo/">the show</a> that a bunch of interesting links and connections between the movies have begun to develop. We started this website to find those links.
         </div>
       </div>
 

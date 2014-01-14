@@ -1,5 +1,5 @@
 <h3>The top rated <em>Movieing On</em> movies!</h3>
-<table class="table table-condensed">
+<table class="table table-hover">
   <tr>
     <td><strong>Poster</strong></td>
     <td><strong>Title</strong></td>
@@ -7,7 +7,7 @@
   </tr>
 <% @movies.each do |movieingonrating, title, year, poster_url| %>
   <tr>
-    <td><img src="<%= poster_url %>" width="30"></td>
+    <td><img src="<%= poster_url %>" width="25"></td>
     <td><h4><em><%= title %></em> <small>(<%= year %>)</small></h4></td>
     <td><h4><%= movieingonrating%></h4></td>
   </tr>

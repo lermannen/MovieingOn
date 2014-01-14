@@ -2,32 +2,32 @@
 <h3>The Leaderboard</h3>
 <table class="table table-hover">
   <tr>
-    <td><span class="glyphicon glyphicon-user"></span> Top actor</td>
+    <td><span class="glyphicon glyphicon-user"></span> Top actor(s)</td>
     <td><%= @actor %></td>
     <td><%= @actor_max %></td>
   </tr>
   <tr>
-    <td><span class="glyphicon glyphicon-user"></span> Top director</td>
+    <td><span class="glyphicon glyphicon-user"></span> Top director(s)</td>
     <td><%= @director %></td>
     <td><%= @director_max %></td>
   </tr>
   <tr>
-    <td><span class="glyphicon glyphicon-usd"></span> Top studio</td>
+    <td><span class="glyphicon glyphicon-usd"></span> Top studio(s)</td>
     <td><%= @production_company %></td>
     <td><%= @production_company_max %></td>
   </tr>
   <tr>
-    <td><span class="glyphicon glyphicon-calendar"></span> Top year</td>
+    <td><span class="glyphicon glyphicon-calendar"></span> Top year(s)</td>
     <td><%= @year[:year] %></td>
     <td><%= @year[:count] %></td>
   </tr>
   <tr class="success">
-    <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie</td>
+    <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie(s)</td>
     <td><em><%= @top_rated.map { |movie| movie[:title]}.sort.join(", ") %></em></td>
     <td><%= @top_rating %></td>
   </tr>
   <tr class="danger">
-    <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie</td>
+    <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie(s)</td>
     <td><em><%= @low_rated[:title] %></em></td>
     <td><%= @low_rated[:movieingonrating]%></td>
   </tr>
@@ -38,8 +38,8 @@
   <table class="table table-hover">
   <% Array(@actors.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
-    <td class="col-md-3"><%= array[:actor] %></td>
-    <td class="col-md-8"><small><em><%= array[:movies] %></em></small></td>
-    <td class="col-md-1"><%= count %></td>
+    <td><%= array[:actor] %></td>
+    <td><em><%= array[:movies] %></em></td>
+    <td><%= count %></td>
   </tr><% end %>
 <% end %></table>
