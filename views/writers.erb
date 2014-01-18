@@ -1,8 +1,8 @@
-<h4>The following actors have appeared in more than one movie:</h4>
+<h4>The following writers have written more than one movie:</h4>
   <table class="table table-hover">
-  <% Array(@actors.sort.reverse).each do |count, hash| %>
+  <% Array(@writers.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
-    <td><%= array[:actor] %></td>
+    <td><%= array[:writer] %></td>
     <td><em><%= array[:movies] %></em></td>
     <td><%= count %></td>
   </tr><% end %>

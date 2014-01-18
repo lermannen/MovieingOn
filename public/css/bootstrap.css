@@ -1658,15 +1658,15 @@ th {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding: 4px;
+  padding: 6px;
   line-height: 1em;
   vertical-align: top;
-  /* border-top: 1px solid #dddddd; */
+  border-top: 1px solid #dddddd;
 }
 
 .table > thead > tr > th {
   vertical-align: bottom;
-  /* border-bottom: 2px solid #dddddd; */
+  border-bottom: 2px solid #dddddd;
 }
 
 .table > caption + thead > tr:first-child > th,
@@ -1679,7 +1679,7 @@ th {
 }
 
 .table > tbody + tbody {
-  /* border-top: 2px solid #dddddd; */
+  border-top: 2px solid #dddddd;
 }
 
 .table .table {

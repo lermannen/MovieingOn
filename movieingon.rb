@@ -169,7 +169,7 @@ class MovieingOn < Sinatra::Base
 		@title = ''
 		@moviecount = Movie.count
 
-		erb :actors
+		erb :home
 	end
 
 	get '/admin' do
@@ -177,6 +177,88 @@ class MovieingOn < Sinatra::Base
 		@title = 'Movies'
 		@moviecount = Movie.count
 		erb :admin
+	end
+
+get '/movie' do
+		@movies = Movie.all
+		@title = 'Movies'
+		@moviecount = Movie.count
+		erb :movie
+	end
+
+get '/actors' do
+		@actor_max = actor_max = DB[:actors].group_and_count(:person_id).max(:count)
+		@actor = DB[:actors___a].
+		  join(:persons___p, :id=>:person_id).
+		  group_and_count(:p__name).having(:count => @actor_max).all.map { |actor| actor[:name] }.sort.join(", ")
+
+		actors = Hash.new{|h,k| h[k] = []}
+
+		Person.all.each do |a|
+			if a.actor.count > 1
+		  	actors[a.actor.count] << {
+		  		:actor => a.name,
+		  		:movies => a.actor.map { |m| m.title}.sort.join(", ")
+		  	}
+		  end
+		end
+
+		@actors = actors
+
+		@title = ''
+		@moviecount = Movie.count
+
+		erb :actors
+	end
+
+get '/directors' do
+		@director_max = director_max = DB[:directors].group_and_count(:person_id).max(:count)
+		@director = DB[:directors___a].
+		  join(:persons___p, :id=>:person_id).
+		  group_and_count(:p__name).having(:count => @director_max).all.map { |director| director[:name] }.sort.join(", ")
+
+		directors = Hash.new{|h,k| h[k] = []}
+
+		Person.all.each do |a|
+			if a.director.count > 1
+		  	directors[a.director.count] << {
+		  		:director => a.name,
+		  		:movies => a.director.map { |m| m.title}.sort.join(", ")
+		  	}
+		  end
+		end
+
+		@directors = directors
+
+		@title = ''
+		@moviecount = Movie.count
+
+		erb :directors
+	end
+
+get '/writers' do
+		@writer_max = writer_max = DB[:writers].group_and_count(:person_id).max(:count)
+		@writer = DB[:writers___a].
+		  join(:persons___p, :id=>:person_id).
+		  group_and_count(:p__name).having(:count => @writer_max).all.map { |writer| writer[:name] }.sort.join(", ")
+
+		writers = Hash.new{|h,k| h[k] = []}
+
+		Person.all.each do |a|
+			if a.writer.count > 1
+		  	writers[a.writer.count] << {
+		  		:writer => a.name,
+		  		:movies => a.writer.map { |m| m.title}.sort.join(", ")
+		  	}
+		  end
+		end
+
+		@writers = writers
+
+		@title = ''
+		@moviecount = Movie.count
+
+		erb :writers
 	end
 
 	get '/rated' do

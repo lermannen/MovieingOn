@@ -1,0 +1,34 @@
+<hr />
+<h3>The Leaderboard</h3>
+<table class="table table-hover">
+  <tr>
+    <td><span class="glyphicon glyphicon-user"></span> Top actor(s)</td>
+    <td><%= @actor %></td>
+    <td><%= @actor_max %></td>
+  </tr>
+  <tr>
+    <td><span class="glyphicon glyphicon-user"></span> Top director(s)</td>
+    <td><%= @director %></td>
+    <td><%= @director_max %></td>
+  </tr>
+  <tr>
+    <td><span class="glyphicon glyphicon-usd"></span> Top studio(s)</td>
+    <td><%= @production_company %></td>
+    <td><%= @production_company_max %></td>
+  </tr>
+  <tr>
+    <td><span class="glyphicon glyphicon-calendar"></span> Top year(s)</td>
+    <td><%= @year[:year] %></td>
+    <td><%= @year[:count] %></td>
+  </tr>
+  <tr class="success">
+    <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie(s)</td>
+    <td><em><%= @top_rated.map { |movie| movie[:title]}.sort.join(", ") %></em></td>
+    <td><%= @top_rating %></td>
+  </tr>
+  <tr class="danger">
+    <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie(s)</td>
+    <td><em><%= @low_rated[:title] %></em></td>
+    <td><%= @low_rated[:movieingonrating]%></td>
+  </tr>
+</table>
