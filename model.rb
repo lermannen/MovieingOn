@@ -1,7 +1,7 @@
 require 'sequel'
 
 DB = Sequel.sqlite('./movieingon.db')
-Tmdb::Api.key("f6343dcd785009de63b392bc4ac98e89")
+Tmdb::Api.key('f6343dcd785009de63b392bc4ac98e89')
 
 class Person < Sequel::Model(:persons)
   many_to_many :actor, :class => :Movie, :right_key => :movie_id, :join_table => :actors
