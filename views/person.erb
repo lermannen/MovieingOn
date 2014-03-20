@@ -1,0 +1,9 @@
+<%= @person.name %>
+<img src="<%= @person.profile_url %>">
+
+<table class="table table-hover">
+  <% @movies.each do |movie| %>
+  <tr>
+    <td><%= movie.year %> - <%= movie.title %></td>
+  </tr>
+<% end %></table>

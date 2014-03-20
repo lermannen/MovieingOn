@@ -1,0 +1,9 @@
+<%= @movie.title %>
+<img src="<%= @movie.poster_url %>">
+
+<table class="table table-hover">
+  <% @actors.each do |actor| %>
+  <tr>
+    <td><%= actor.name %></td>
+  </tr>
+<% end %></table>
