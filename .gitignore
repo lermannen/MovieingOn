@@ -6,3 +6,6 @@ movieingon.db
 test.rb
 
 *.old
+
+bin/
+*.sublime*
