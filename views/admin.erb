@@ -15,6 +15,6 @@
 
 <hr />
   <article>
-    <h3><span class="glyphicon glyphicon-film"></span> Episode #<%= movie.episode %>: <em><%= movie.title %></em> <small>(<%= movie.year %>)</small></h3>
+    <h3><span class="glyphicon glyphicon-film"></span> Episode <%= movie.episode %>: <a href="/movie/<%= movie.moviedb_id %>"><em><%= movie.title %></em></a> (<%= movie.year %>)</h3>
   </article>
 <% end %>

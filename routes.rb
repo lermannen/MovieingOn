@@ -51,7 +51,7 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/admin' do
-    protected!
+    #protected!
     @movies = Movie.all
     @title = 'Movies'
     @moviecount = Movie.count

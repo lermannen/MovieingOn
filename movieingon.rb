@@ -6,76 +6,120 @@ require 'sqlite3'
 require 'sinatra/base'
 require 'sequel'
 require 'themoviedb'
+require 'set'
 
 require_relative 'model'
 require_relative 'routes'
 
+# Wrapper for themoviedb gem.
+class TheMovieDB
+  def initialize
+    @config = Tmdb::Configuration.new
+    Tmdb::Api.key('f6343dcd785009de63b392bc4ac98e89')
+  end
+
+  def base_url
+    @config.base_url + 'w185'
+  end
+
+  def crew(movie_id)
+    crew = Tmdb::Movie.crew(movie_id)
+    s = Set.new
+    crew.each do |crewman|
+      path = "#{base_url}#{crewman['profile_path']}" unless crewman['profile_path'].nil?
+      c = Crewman.new(crewman['name'], crewman['id'], path)
+      if crewman['department'] == 'Writing'
+        c.job = :writer
+      elsif crewman['job'] == 'Producer' || crewman['job'] == 'Director'
+        c.job = crewman['job'].downcase.to_sym
+      end
+      s.add(c)
+    end
+    s
+  end
+
+  def actors(movie_id)
+    actors = Tmdb::Movie.casts(movie_id)
+    s = Set.new
+    actors.each do |actor|
+      path = "#{base_url}#{actor['profile_path']}" unless actor['profile_path'].nil?
+      s.add(Crewman.new(actor['name'], actor['id'], path, :actor))
+    end
+    s
+  end
+
+  def movie_details(movie_id)
+    Tmdb::Movie.detail(movie_id)
+  end
+
+  Crewman = Struct.new(:name, :id, :profile_path, :job) do
+
+  end
+end
+
 # Base class for the MovieingOne application.
 class MovieingOn < Sinatra::Base
-  attr_reader :configuration
+  attr_reader :themoviedb
 
   def initialize
     super
-    @configuration = Tmdb::Configuration.new
-    Tmdb::Api.key('f6343dcd785009de63b392bc4ac98e89')
+    @themoviedb = TheMovieDB.new
   end
 
   def add_actor(actor, movie)
     person = Person.first(moviedb_id: actor['id'])
 
     if person
-      movie.add_actor(person[:id])
+      movie.add_actor(person.id)
     else
       movie.add_actor(
-        name: actor['name'],
-        moviedb_id: actor['id'],
-        profile_url: actor['profile_path']
-          .nil? ? nil : "#{configuration.base_url}w185#{actor['profile_path']}"
+        name: actor.name,
+        moviedb_id: actor.id,
+        profile_url: actor.profile_path
       )
     end
   end
 
   def add_cast(movie_id, created_movie_id)
-    cast = Tmdb::Movie.casts(movie_id, created_movie_id)
+    actors = themoviedb.actors(movie_id)
 
-    cast.each do |actor|
-        add_actor(actor, created_movie_id)
+    actors.each do |actor|
+      add_actor(actor, created_movie_id)
     end
   end
 
   def add_crew(movie_id, created_movie_id)
-    crew = Tmdb::Movie.crew(movie_id)
+    crew = themoviedb.crew(movie_id)
     crew.each do |crewman|
-      person = Person.where(moviedb_id: crewman['id']).first
-
-      if crewman['department'] == 'Writing'
+      person = Person.where(moviedb_id: crewman.id).first
+      if crewman.job == :writer
         if person
-          created_movie_id.add_writer(person[:id])
+          created_movie_id.add_writer(person.id)
         else
           created_movie_id.add_writer(
-            name: crewman['name'],
-            moviedb_id: crewman['id'],
-            profile_url: "#{configuration.base_url}w185#{crewman['profile_path']}"
+            name: crewman.name,
+            moviedb_id: crewman.id,
+            profile_url: crewman.profile_path
           )
         end
-      elsif crewman['job'] == 'Producer'
+      elsif crewman.job == :producer
         if person
           created_movie_id.add_producer(person[:id])
         else
           created_movie_id.add_producer(
-            name: crewman['name'],
-            moviedb_id: crewman['id'],
-            profile_url: "#{configuration.base_url}w185#{crewman['profile_path']}"
+            name: crewman.name,
+            moviedb_id: crewman.id,
+            profile_url: crewman.profile_path
           )
         end
-      elsif crewman['job'] == 'Director'
+      elsif crewman.job == :director
         if person
           created_movie_id.add_director(person[:id])
         else
           created_movie_id.add_director(
-            name: crewman['name'],
-            moviedb_id: crewman['id'],
-            profile_url: "#{configuration.base_url}w185#{crewman['profile_path']}"
+            name: crewman.name,
+            moviedb_id: crewman.id,
+            profile_url: crewman.profile_path
           )
         end
       end
@@ -107,7 +151,7 @@ class MovieingOn < Sinatra::Base
   end
 
   def add_movie_to_database(movie_id, movieingonrating, imdbrating, episode)
-    movie = Tmdb::Movie.detail(movie_id)
+    movie = themoviedb.movie_details(movie_id)
 
     if movie
       current_movie = Movie.filter(moviedb_id: movie.id).first
@@ -123,7 +167,7 @@ class MovieingOn < Sinatra::Base
           m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
           m.movieingonrating = movieingonrating
           m.imdbrating = imdbrating
-          m.poster_url = "#{configuration.base_url}w185#{movie.poster_path}"
+          m.poster_url = "#{themoviedb.base_url}#{movie.poster_path}" unless movie.poster_path.nil?
           m.episode = episode
         end
 
