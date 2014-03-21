@@ -13,20 +13,26 @@ require_relative 'routes'
 
 # Wrapper for themoviedb gem.
 class TheMovieDB
+  attr_reader :config
+
   def initialize
     @config = Tmdb::Configuration.new
     Tmdb::Api.key('f6343dcd785009de63b392bc4ac98e89')
   end
 
   def base_url
-    @config.base_url + 'w185'
+    config.base_url + 'w185'
+  end
+
+  def image_url(profile_path)
+    "#{base_url}#{profile_path}" unless profile_path.nil?
   end
 
   def crew(movie_id)
     crew = Tmdb::Movie.crew(movie_id)
     s = Set.new
     crew.each do |crewman|
-      path = "#{base_url}#{crewman['profile_path']}" unless crewman['profile_path'].nil?
+      path = image_url(crewman['profile_path'])
       c = Crewman.new(crewman['name'], crewman['id'], path)
       if crewman['department'] == 'Writing'
         c.job = :writer
@@ -42,7 +48,7 @@ class TheMovieDB
     actors = Tmdb::Movie.casts(movie_id)
     s = Set.new
     actors.each do |actor|
-      path = "#{base_url}#{actor['profile_path']}" unless actor['profile_path'].nil?
+      path = image_url(actor['profile_path'])
       s.add(Crewman.new(actor['name'], actor['id'], path, :actor))
     end
     s
@@ -167,7 +173,7 @@ class MovieingOn < Sinatra::Base
           m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
           m.movieingonrating = movieingonrating
           m.imdbrating = imdbrating
-          m.poster_url = "#{themoviedb.base_url}#{movie.poster_path}" unless movie.poster_path.nil?
+          m.poster_url = themoviedb.image_url(movie.poster_path)
           m.episode = episode
         end
 
