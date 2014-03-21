@@ -8,7 +8,7 @@ require 'sequel'
 
 require_relative 'model'
 require_relative 'routes'
-require_relative 'themoviedb'
+require_relative 'lib/themoviedb'
 
 # Base class for the MovieingOne application.
 class MovieingOn < Sinatra::Base

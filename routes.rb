@@ -1,5 +1,5 @@
 require 'sinatra'
-require_relative 'movieingonhelpers'
+require_relative 'lib/movieingonhelpers'
 
 class MovieingOn < Sinatra::Base
   helpers Sinatra::MovieingOnHelpers
