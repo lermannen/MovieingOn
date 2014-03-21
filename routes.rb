@@ -78,7 +78,8 @@ class MovieingOn < Sinatra::Base
       if a.actor.count > 1
         actors[a.actor.count] << {
           actor: a.name,
-          movies: a.actor.map { |m| m.title }.sort.join(', ')
+          movies: a.actor.map { |m| m.title }.sort.join(', '),
+          id: a.moviedb_id
         }
       end
     end
@@ -145,7 +146,7 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/rated' do
-    @movies = Movie.select_map([:movieingonrating, :title, :year, :poster_url])
+    @movies = Movie.select_map([:movieingonrating, :title, :year, :poster_url, :moviedb_id])
       .sort.reverse
     @title = 'Our ratings'
     @moviecount = Movie.count

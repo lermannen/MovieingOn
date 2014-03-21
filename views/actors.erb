@@ -2,7 +2,7 @@
   <table class="table table-hover">
   <% Array(@actors.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
-    <td><%= array[:actor] %></td>
+    <td><a href="/person/<%= array[:id] %>"><%= array[:actor] %></a></td>
     <td><em><%= array[:movies] %></em></td>
     <td><%= count %></td>
   </tr><% end %>
