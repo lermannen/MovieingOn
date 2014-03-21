@@ -105,7 +105,8 @@ class MovieingOn < Sinatra::Base
       if a.director.count > 1
         directors[a.director.count] << {
           director: a.name,
-          movies: a.director.map { |m| m.title }.sort.join(', ')
+          movies: a.director.map { |m| m.title }.sort.join(', '),
+          id: a.moviedb_id
         }
       end
     end
@@ -132,7 +133,8 @@ class MovieingOn < Sinatra::Base
       if a.writer.count > 1
         writers[a.writer.count] << {
           writer: a.name,
-          movies: a.writer.map { |m| m.title }.sort.join(', ')
+          movies: a.writer.map { |m| m.title }.sort.join(', '),
+          id: a.moviedb_id
         }
       end
     end
