@@ -9,7 +9,7 @@
     <table class="table table-hover">
       <% @movies.each do |movie| %>
       <tr>
-        <td>Episode <%= movie.episode %>: <a href="/movie/<%= movie.moviedb_id %>"><em><%= movie.title %></em></a> (<%= movie.year %>)</td>
+        <td>Episode <%= movie.episode %>: <a href="/movie/<%= movie.moviedb_id %>"><em><%= movie.title %></em></a> (<%= movie.year %>) (<%= movie[:job] %>)</td>
       </tr>
     <% end %></table>
   </div>

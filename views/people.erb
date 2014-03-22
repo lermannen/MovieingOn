@@ -1,8 +1,8 @@
-<h4>The following directors have directed more than one movie:</h4>
+<h4>The following <%= @job %> have written more than one movie:</h4>
   <table class="table table-hover">
-  <% Array(@directors.sort.reverse).each do |count, hash| %>
+  <% Array(@people.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
-    <td><%= array[:director] %></td>
+    <td><%= array[:name] %></td>
     <td><em><%= array[:movies] %></em></td>
     <td><%= count %></td>
   </tr><% end %>

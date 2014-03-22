@@ -19,6 +19,20 @@ class MovieingOn < Sinatra::Base
     @themoviedb = TheMovieDB.new
   end
 
+  def get_top_list(job)
+    persons = Hash.new { |h, k| h[k] = [] }
+
+    Person.all.each do |p|
+      movie_list = p.movies_dataset.where(job: job).all
+      persons[movie_list.count] << {
+        name: p.name,
+        movies: movie_list.map { |m| m.title }.sort.join(', ')
+      } unless movie_list.count == 0
+    end
+
+    persons
+  end
+
   def add_actor(actor, movie)
     person = Person.first(moviedb_id: actor['id'])
 

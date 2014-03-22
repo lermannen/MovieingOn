@@ -51,7 +51,7 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/admin' do
-    #protected!
+    protected!
     @movies = Movie.all
     @title = 'Movies'
     @moviecount = Movie.count
@@ -66,83 +66,24 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/actors' do
-    @actor_max = DB[:actors].group_and_count(:person_id).max(:count)
-    @actor = DB[:actors___a]
-      .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).having(count: @actor_max).all
-      .map { |actor| actor[:name] }.sort.join(', ')
-
-    actors = Hash.new { |h, k| h[k] = [] }
-
-    Person.all.each do |a|
-      if a.actor.count > 1
-        actors[a.actor.count] << {
-          actor: a.name,
-          movies: a.actor.map { |m| m.title }.sort.join(', '),
-          id: a.moviedb_id
-        }
-      end
-    end
-
-    @actors = actors
-
+    @people = get_top_list('actor')
     @title = ''
-    @moviecount = Movie.count
-
-    erb :actors
+    @job = 'actors'
+    erb :people
   end
 
   get '/directors' do
-    @director_max = DB[:directors].group_and_count(:person_id).max(:count)
-    @director = DB[:directors___a]
-      .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).having(count: @director_max).all
-      .map { |director| director[:name] }.sort.join(', ')
-
-    directors = Hash.new { |h, k| h[k] = [] }
-
-    Person.all.each do |a|
-      if a.director.count > 1
-        directors[a.director.count] << {
-          director: a.name,
-          movies: a.director.map { |m| m.title }.sort.join(', ')
-        }
-      end
-    end
-
-    @directors = directors
-
+    @people = get_top_list('director')
     @title = ''
-    @moviecount = Movie.count
-
-    erb :directors
+    @job = 'directors'
+    erb :people
   end
 
   get '/writers' do
-    @writer_max = DB[:writers].group_and_count(:person_id)
-    .max(:count)
-    @writer = DB[:writers___a]
-      .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).having(count: @writer_max).all
-      .map { |writer| writer[:name] }.sort.join(', ')
-
-    writers = Hash.new { |h, k| h[k] = [] }
-
-    Person.all.each do |a|
-      if a.writer.count > 1
-        writers[a.writer.count] << {
-          writer: a.name,
-          movies: a.writer.map { |m| m.title }.sort.join(', ')
-        }
-      end
-    end
-
-    @writers = writers
-
+    @people = get_top_list('writer')
     @title = ''
-    @moviecount = Movie.count
-
-    erb :writers
+    @job = 'writers'
+    erb :people
   end
 
   get '/rated' do
@@ -156,21 +97,21 @@ class MovieingOn < Sinatra::Base
   get '/person/:person_id' do |person_id|
     @person = Person[moviedb_id: person_id]
     @title = @person.name
-    @movies = Person[moviedb_id: person_id].actor
+    @movies = Person[moviedb_id: person_id].movies
     erb :person
   end
 
   get '/movie/:movie_id' do |movie_id|
     @movie = Movie[moviedb_id: movie_id]
     @title = @movie.title
-    @actors = Movie[moviedb_id: movie_id].actor
+    @actors = Movie[moviedb_id: movie_id].crew
     erb :episode
   end
 
   get '/episode/:episode' do |episode|
     @movie = Movie[episode: episode]
     @title = @movie.title
-    @actors = Movie[episode: episode].actor
+    @actors = Movie[episode: episode].crew
     erb :episode
   end
 
