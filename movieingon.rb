@@ -27,7 +27,7 @@ class MovieingOn < Sinatra::Base
       persons[movie_list.count] << {
         name: p.name,
         movies: movie_list.map { |m| m.title }.sort.join(', ')
-      } unless movie_list.count == 0
+      } unless movie_list.count <= 1
     end
 
     persons

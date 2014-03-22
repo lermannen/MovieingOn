@@ -1,6 +1,7 @@
 require 'sinatra'
 require_relative 'lib/movieingonhelpers'
 
+# Routes for the application.
 class MovieingOn < Sinatra::Base
   helpers Sinatra::MovieingOnHelpers
 
@@ -18,7 +19,7 @@ class MovieingOn < Sinatra::Base
       .join(:productioncompanies___p, id: :productioncompany_id)
       .group_and_count(:p__name).having(count: @production_company_max).all
       .map { |production_company| production_company[:name] }.sort.join(', ')
-   
+
     @year = Movie.group_and_count(:year).order(:count).last
     @top_rating = Movie.max(:movieingonrating)
     @top_rated = Movie.where(movieingonrating: @top_rating).all
@@ -49,21 +50,21 @@ class MovieingOn < Sinatra::Base
   get '/actors' do
     @people = get_top_list('actor')
     @title = ''
-    @job = 'actors'
+    @header = 'The following actors have acted more than one movie:'
     erb :people
   end
 
   get '/directors' do
     @people = get_top_list('director')
     @title = ''
-    @job = 'directors'
+    @header = 'The following directors have directed more than one movie:'
     erb :people
   end
 
   get '/writers' do
     @people = get_top_list('writer')
     @title = ''
-    @job = 'writers'
+    @header = 'The following writers have written more than one movie:'
     erb :people
   end
 
