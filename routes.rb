@@ -5,19 +5,11 @@ class MovieingOn < Sinatra::Base
   helpers Sinatra::MovieingOnHelpers
 
   get '/' do
-    @actor_max = DB[:actors].group_and_count(:person_id).max(:count)
+    @actor_max = job_max('actor')
+    @actor = job_toplist('actor', @actor_max)
 
-    @actor = DB[:actors___a]
-      .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).having(count: @actor_max).all
-      .map { |actor| actor[:name] }.sort.join(', ')
-
-    @director_max = DB[:directors].group_and_count(:person_id).max(:count)
-
-    @director = DB[:directors___d]
-      .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).having(count: @director_max).all
-      .map { |director| director[:name] }.sort.join(', ')
+    @director_max = job_max('director')
+    @director = job_toplist('director', @director_max)
 
     @production_company_max = DB[:movie_productioncompany]
       .group_and_count(:productioncompany_id).max(:count)
@@ -26,24 +18,13 @@ class MovieingOn < Sinatra::Base
       .join(:productioncompanies___p, id: :productioncompany_id)
       .group_and_count(:p__name).having(count: @production_company_max).all
       .map { |production_company| production_company[:name] }.sort.join(', ')
+   
     @year = Movie.group_and_count(:year).order(:count).last
     @top_rating = Movie.max(:movieingonrating)
     @top_rated = Movie.where(movieingonrating: @top_rating).all
     @low_rated = Movie.order(:movieingonrating).first
 
-    actors = Hash.new { |h, k| h[k] = [] }
-
-    Person.all.each do |a|
-      if a.actor.count > 1
-        actors[a.actor.count] << {
-          actor: a.name,
-          movies: a.actor.map { |m| m.title }.sort.join(', ')
-        }
-      end
-    end
-
-    @actors = actors
-
+    @actors = get_top_list('actor')
     @title = ''
     @moviecount = Movie.count
 

@@ -33,6 +33,17 @@ class MovieingOn < Sinatra::Base
     persons
   end
 
+  def job_max(job)
+    DB[:crew].group_and_count(:person_id).where(job: job).max(:count)
+  end
+
+  def job_toplist(job, max_count)
+    DB[:crew___a]
+      .join(:persons___p, id: :person_id)
+      .group_and_count(:p__name).where(job: job).having(count: max_count).all
+      .map { |person| person[:name] }.sort.join(', ')
+  end
+
   def add_actor(actor, movie)
     person = Person.first(moviedb_id: actor['id'])
 
