@@ -51,6 +51,7 @@ class MovieingOn < Sinatra::Base
     @people = get_top_list('actor')
     @title = ''
     @header = 'The following actors have acted more than one movie:'
+    @moviecount = Movie.count
     erb :people
   end
 
@@ -58,6 +59,7 @@ class MovieingOn < Sinatra::Base
     @people = get_top_list('director')
     @title = ''
     @header = 'The following directors have directed more than one movie:'
+    @moviecount = Movie.count
     erb :people
   end
 
@@ -65,6 +67,7 @@ class MovieingOn < Sinatra::Base
     @people = get_top_list('writer')
     @title = ''
     @header = 'The following writers have written more than one movie:'
+    @moviecount = Movie.count
     erb :people
   end
 
@@ -80,6 +83,7 @@ class MovieingOn < Sinatra::Base
     @person = Person[moviedb_id: person_id]
     @title = @person.name
     @movies = Person[moviedb_id: person_id].movies
+    @moviecount = Movie.count
     erb :person
   end
 
@@ -87,6 +91,7 @@ class MovieingOn < Sinatra::Base
     @movie = Movie[moviedb_id: movie_id]
     @title = @movie.title
     @actors = Movie[moviedb_id: movie_id].crew
+    @moviecount = Movie.count
     erb :episode
   end
 
@@ -94,6 +99,7 @@ class MovieingOn < Sinatra::Base
     @movie = Movie[episode: episode]
     @title = @movie.title
     @actors = Movie[episode: episode].crew
+    @moviecount = Movie.count
     erb :episode
   end
 
