@@ -29,7 +29,7 @@ class TheMovieDB
       elsif crewman['job'] == 'Producer' || crewman['job'] == 'Director'
         c.job = crewman['job'].downcase.to_sym
       end
-      s.add(c)
+      s.add(c) if c.job
     end
     s
   end

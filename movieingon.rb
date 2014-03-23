@@ -48,13 +48,13 @@ class MovieingOn < Sinatra::Base
     person = Person.first(moviedb_id: actor['id'])
 
     if person
-      movie.add_actor(person.id)
+      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person.id, movie.id, 'actor']
+      ds.insert
     else
-      movie.add_actor(
-        name: actor.name,
-        moviedb_id: actor.id,
-        profile_url: actor.profile_path
-      )
+      ds = DB['INSERT INTO persons (name, moviedb_id, profile_url) VALUES (?, ?, ?)', actor.name, actor.id, actor.profile_path]
+      person_id = ds.insert
+      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person_id, movie.id, 'actor']
+      ds.insert
     end
   end
 
@@ -66,43 +66,21 @@ class MovieingOn < Sinatra::Base
     end
   end
 
-  def add_crew(movie_id, created_movie_id)
-    crew = themoviedb.crew(movie_id)
-    crew.each do |crewman|
-      person = Person.where(moviedb_id: crewman.id).first
-      if crewman.job == :writer
-        if person
-          created_movie_id.add_writer(person.id)
-        else
-          created_movie_id.add_writer(
-            name: crewman.name,
-            moviedb_id: crewman.id,
-            profile_url: crewman.profile_path
-          )
-        end
-      elsif crewman.job == :producer
-        if person
-          created_movie_id.add_producer(person[:id])
-        else
-          created_movie_id.add_producer(
-            name: crewman.name,
-            moviedb_id: crewman.id,
-            profile_url: crewman.profile_path
-          )
-        end
-      elsif crewman.job == :director
-        if person
-          created_movie_id.add_director(person[:id])
-        else
-          created_movie_id.add_director(
-            name: crewman.name,
-            moviedb_id: crewman.id,
-            profile_url: crewman.profile_path
-          )
-        end
-      end
+def add_crew(movie_id, created_movie_id)
+  crew = themoviedb.crew(movie_id)
+  crew.each do |crewman|
+    person = Person.where(moviedb_id: crewman.id).first
+    if person
+      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person.id, created_movie_id.id, crewman.job.to_s]
+      ds.insert
+    else
+      ds = DB['INSERT INTO persons (name, moviedb_id, profile_url) VALUES (?, ?, ?)', crewman.name, crewman.id, crewman.profile_path]
+      person_id = ds.insert
+      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person_id, created_movie_id.id, crewman.job.to_s]
+      ds.insert
     end
   end
+end
 
   def add_production_company(created_movie_id, company)
     prodco = Productioncompany.where(moviedb_id: company['id']).first
