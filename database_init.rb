@@ -34,24 +34,10 @@ DB.create_table(:movies) do
   String :poster_url
 end
 
-DB.create_table(:actors) do
+DB.create_table(:crew) do
   foreign_key :person_id, :persons, :null => false
   foreign_key :movie_id, :movies, :null => false
-end
-
-DB.create_table(:writers) do
-  foreign_key :person_id, :persons, :null => false
-  foreign_key :movie_id, :movies, :null => false
-end
-
-DB.create_table(:directors) do
-  foreign_key :person_id, :persons, :null => false
-  foreign_key :movie_id, :movies, :null => false
-end
-
-DB.create_table(:producers) do
-  foreign_key :person_id, :persons, :null => false
-  foreign_key :movie_id, :movies, :null => false
+  String :job, :null => false
 end
 
 DB.create_table(:movie_productioncompany) do
