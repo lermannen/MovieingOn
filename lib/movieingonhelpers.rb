@@ -11,8 +11,7 @@ module Sinatra
 
     def authorized?
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? && @auth.basic? && @auth.credentials && \
-      @auth.credentials == %w('admin', 'et7BXo9WAiwbs9')
+      @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == %w('admin', 'admin')
     end
   end
 end

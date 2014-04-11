@@ -3,7 +3,20 @@ require_relative 'lib/movieingonhelpers'
 
 # Routes for the application.
 class MovieingOn < Sinatra::Base
-  helpers Sinatra::MovieingOnHelpers
+  #helpers Sinatra::MovieingOnHelpers
+
+  class Protected < Sinatra::Base
+    use Rack::Auth::Basic, "Protected Area" do |username, password|
+      username == 'admin' && password == 'admin'
+    end
+
+    get '/admin' do
+      @movies = Movie.all
+      @title = 'Movies'
+      @moviecount = Movie.count
+      erb :admin
+    end
+  end
 
   get '/' do
     @actor_max = job_max('actor')
@@ -30,14 +43,6 @@ class MovieingOn < Sinatra::Base
     @moviecount = Movie.count
 
     erb :home
-  end
-
-  get '/admin' do
-    # protected!
-    @movies = Movie.all
-    @title = 'Movies'
-    @moviecount = Movie.count
-    erb :admin
   end
 
   get '/movie' do
@@ -101,6 +106,17 @@ class MovieingOn < Sinatra::Base
     @actors = Movie[episode: episode].crew
     @moviecount = Movie.count
     erb :episode
+  end
+
+  get '/years' do
+    @title = "Our years"
+    years = Hash.new(0)
+    Movie.all.each do |movie|
+      years[movie.year.to_s] += 1
+    end
+    @years = years.sort_by { |key, value | [-Integer(value), key] }
+
+    erb :years
   end
 
   post '/' do
