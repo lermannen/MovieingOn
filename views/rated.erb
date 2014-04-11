@@ -8,7 +8,7 @@
 <% @movies.each do |movieingonrating, title, year, poster_url, moviedb_id| %>
   <tr>
     <td><img src="<%= poster_url %>" width="25"></td>
-    <td><h4><a href="/movie/<%= moviedb_id %>"><em><%= title %></em></a> <small>(<%= year %>)</small></h4></td>
+    <td><h4><a href="/movie/<%= moviedb_id %>"><em><%= title %></em></a> <small>(<a href="/years/<%= year %>"><%= year %></a>)</small></h4></td>
     <td><h4><%= movieingonrating %></h4></td>
   </tr>
 <% end %>

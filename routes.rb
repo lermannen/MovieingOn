@@ -84,6 +84,33 @@ class MovieingOn < Sinatra::Base
     erb :rated
   end
 
+  get '/years' do
+    @title = "Our years"
+    @header = 'Here are the various years we have covered:'
+    years = Hash.new(0)
+    Movie.all.each do |movie| years[movie.year.to_s] += 1
+    end
+    @years = years.sort_by { |_key, value | value }.reverse
+    erb :countyears
+  end
+
+  get '/genres' do
+    @title = "Our genres"
+    @header = 'Here are the various genres we have covered:'
+    genres = Hash.new(0)
+    Movie.all.each do |movie| genres[movie.genre.to_s] += 1
+    end
+    @genres = genres.sort_by { |_key, value | value }.reverse
+    erb :countgenres
+  end
+
+  get '/years/:year' do |year|
+    @movies = Movie.filter(year: year).all
+    @moviecount = Movie.count
+    @title = year
+    erb :movielist
+  end
+
   get '/person/:person_id' do |person_id|
     @person = Person[moviedb_id: person_id]
     @title = @person.name
