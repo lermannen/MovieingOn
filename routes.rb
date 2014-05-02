@@ -89,11 +89,22 @@ class MovieingOn < Sinatra::Base
     erb :rated
   end
 
+  get '/studios' do
+    @title = "Our productioncompanies"
+    @header = 'Here are the various productioncompanies we have covered:'
+    productioncompanies = Hash.new(0)
+    Productioncompany.all.each do |studio|
+      productioncompanies[studio.name] = studio.movies.count
+    end
+    @productioncompanies = productioncompanies.sort_by { |_key, value | value }.reverse
+    erb :countstudios
+  end
+
   get '/years' do
     @title = "Our years"
     @header = 'Here are the various years we have covered:'
     years = Hash.new(0)
-    Movie.all.each do |movie| 
+    Movie.all.each do |movie|
       years[movie.year.to_s] += 1
     end
     @years = years.sort_by { |_key, value | value }.reverse
@@ -104,7 +115,7 @@ class MovieingOn < Sinatra::Base
     @title = "Our genres"
     @header = 'Here are the various genres we have covered:'
     genres = Hash.new(0)
-    Genre.all.each do |genre| 
+    Genre.all.each do |genre|
       genres[genre.name] = genre.movies.count
     end
     @genres = genres.sort_by { |_key, value | value }.reverse
@@ -152,6 +163,8 @@ class MovieingOn < Sinatra::Base
 
     erb :years
   end
+
+
 
   post '/' do
     add_movie_to_database(
