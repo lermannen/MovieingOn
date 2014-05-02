@@ -1,21 +1,26 @@
 require 'sinatra'
-require_relative 'lib/movieingonhelpers'
 
 # Routes for the application.
 class MovieingOn < Sinatra::Base
-  #helpers Sinatra::MovieingOnHelpers
-
-  class Protected < Sinatra::Base
-    use Rack::Auth::Basic, "Protected Area" do |username, password|
-      username == 'admin' && password == 'admin'
+  helpers do
+    def protected!
+      return if authorized?
+      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+      halt 401, "Not authorized\n"
     end
 
-    get '/admin' do
-      @movies = Movie.all
-      @title = 'Movies'
-      @moviecount = Movie.count
-      erb :admin
+    def authorized?
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', '7qxbxwm4tDjT4T']
     end
+  end
+
+  get '/admin' do
+    protected!
+    @movies = Movie.all
+    @title = 'Movies'
+    @moviecount = Movie.count
+    erb :admin
   end
 
   get '/' do
@@ -45,7 +50,7 @@ class MovieingOn < Sinatra::Base
     erb :home
   end
 
-  get '/movie' do
+  get '/movies' do
     @movies = Movie.all
     @title = 'Movies'
     @moviecount = Movie.count
@@ -106,7 +111,7 @@ class MovieingOn < Sinatra::Base
     erb :countgenres
   end
 
-  get '/years/:year' do |year|
+  get '/year/:year' do |year|
     @movies = Movie.filter(year: year).all
     @moviecount = Movie.count
     @title = year
@@ -138,7 +143,7 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/years' do
-    @title = "Our years"
+    @title = 'Our years'
     years = Hash.new(0)
     Movie.all.each do |movie|
       years[movie.year.to_s] += 1
