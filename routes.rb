@@ -164,8 +164,6 @@ class MovieingOn < Sinatra::Base
     erb :years
   end
 
-
-
   post '/' do
     add_movie_to_database(
       params[:movie_id],
