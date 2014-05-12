@@ -1,7 +1,7 @@
-require 'sqlite3'
+require 'pg'
 require 'sequel'
 
-DB = Sequel.sqlite('./movieingon.db')
+DB = Sequel.connect('postgres://akorling@localhost:5432/movieingon')
 
 DB.create_table(:persons) do
   primary_key :id

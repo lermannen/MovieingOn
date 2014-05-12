@@ -30,14 +30,17 @@ class MovieingOn < Sinatra::Base
     @director_max = job_max('director')
     @director = job_toplist('director', @director_max)
 
-    @production_company_max = DB[:movie_productioncompany]
+    production_company_max = DB[:movie_productioncompany]
       .group_and_count(:productioncompany_id).max(:count)
 
     @production_company = DB[:movie_productioncompany___mpc]
       .join(:productioncompanies___p, id: :productioncompany_id)
-      .group_and_count(:p__name).having(count: @production_company_max).all
+      .group_and_count(:p__name)
+      .having{count(:*){} >= production_company_max}
+      .all
       .map { |production_company| production_company[:name] }.sort.join(', ')
 
+    @production_company_max = production_company_max
     @year = Movie.group_and_count(:year).order(:count).last
     @top_rating = Movie.max(:movieingonrating)
     @top_rated = Movie.where(movieingonrating: @top_rating).all

@@ -1,8 +1,7 @@
-# encoding: utf-8
 require 'rubygems'
 require 'bundler/setup'
 
-require 'sqlite3'
+require 'pg'
 require 'sinatra/base'
 require 'sequel'
 
@@ -40,7 +39,7 @@ class MovieingOn < Sinatra::Base
   def job_toplist(job, max_count)
     DB[:crew___a]
       .join(:persons___p, id: :person_id)
-      .group_and_count(:p__name).where(job: job).having(count: max_count).all
+      .group_and_count(:p__name).where(job: job).having{count(:*){} >= max_count}.all
       .map { |person| person[:name] }.sort.join(', ')
   end
 
@@ -48,13 +47,16 @@ class MovieingOn < Sinatra::Base
     person = Person.first(moviedb_id: actor['id'])
 
     if person
-      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person.id, movie.id, 'actor']
-      ds.insert
+      ds = DB[:crew]
+      ds.insert(person_id: person.id, movie_id: movie.id, job: 'actor')
     else
-      ds = DB['INSERT INTO persons (name, moviedb_id, profile_url) VALUES (?, ?, ?)', actor.name, actor.id, actor.profile_path]
-      person_id = ds.insert
-      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person_id, movie.id, 'actor']
-      ds.insert
+      ds = DB[:persons]
+      person_id = ds.insert(
+        name: actor.name,
+        moviedb_id: actor.id,
+        profile_url: actor.profile_path)
+      ds = DB[:crew]
+      ds.insert(person_id: person_id, movie_id: movie.id, job: 'actor')
     end
   end
 
@@ -66,21 +68,30 @@ class MovieingOn < Sinatra::Base
     end
   end
 
-def add_crew(movie_id, created_movie_id)
-  crew = themoviedb.crew(movie_id)
-  crew.each do |crewman|
-    person = Person.where(moviedb_id: crewman.id).first
-    if person
-      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person.id, created_movie_id.id, crewman.job.to_s]
-      ds.insert
-    else
-      ds = DB['INSERT INTO persons (name, moviedb_id, profile_url) VALUES (?, ?, ?)', crewman.name, crewman.id, crewman.profile_path]
-      person_id = ds.insert
-      ds = DB['INSERT INTO crew (person_id, movie_id, job) VALUES (?, ?, ?)', person_id, created_movie_id.id, crewman.job.to_s]
-      ds.insert
+  def add_crew(movie_id, created_movie_id)
+    crew = themoviedb.crew(movie_id)
+    crew.each do |crewman|
+      person = Person.where(moviedb_id: crewman.id).first
+      if person
+        ds = DB[:crew]
+        ds.insert(
+          person_id: person.id,
+          movie_id: created_movie_id.id,
+          job: crewman.job.to_s)
+      else
+        ds = DB[:persons]
+        person_id = ds.insert(
+          name: crewman.name,
+          moviedb_id: crewman.id,
+          profile_url: crewman.profile_path)
+        ds = DB[:crew]
+        ds.insert(
+          person_id: person_id,
+          movie_id: created_movie_id.id,
+          job: crewman.job.to_s)
+      end
     end
   end
-end
 
   def add_production_company(created_movie_id, company)
     prodco = Productioncompany.where(moviedb_id: company['id']).first

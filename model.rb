@@ -1,6 +1,6 @@
 require 'sequel'
 
-DB = Sequel.sqlite('./movieingon.db')
+DB = Sequel.connect('postgres://akorling@localhost:5432/movieingon')
 
 class Person < Sequel::Model(:persons)
   many_to_many :movies, :class => :Movie, :right_key => :movie_id, :join_table => :crew, :select=>[Sequel.expr(:movies).*, :crew__job]
