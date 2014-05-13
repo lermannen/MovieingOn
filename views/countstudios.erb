@@ -1,5 +1,9 @@
 <h4><%= @header %></h4>
   <table class="table table-hover">
+    <tr>
+  	<td>Studio</td>
+  	<td>Amount</td>
+  </tr>
   <% @productioncompanies.each do |production_company, count| %>
   <tr>
     <td><a href="/studios/<%= production_company %>"><%= production_company %></a></td>

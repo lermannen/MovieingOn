@@ -1,5 +1,10 @@
 <h4><%= @header %></h4>
   <table class="table table-hover">
+    <tr>
+  	<td>Person</td>
+  	<td>Movies</td>
+  	<td>Amount</td>
+  </tr>
   <% Array(@people.sort.reverse).each do |count, hash| %>
   <tr><% hash.each do |array| %>
     <td><%= array[:name] %></td>
