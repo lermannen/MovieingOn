@@ -1,7 +1,7 @@
 require 'pg'
 require 'sequel'
 
-DB = Sequel.connect('postgres://akorling@localhost:5432/movieingon')
+DB = Sequel.connect(ENV['DATABASE_URL'])
 
 DB.create_table(:persons) do
   primary_key :id
