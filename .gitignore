@@ -3,10 +3,7 @@
 
 movieingon.db
 
-test.rb
-
-*.old
-
+slask/
 bin/
 *.sublime*
 .env

@@ -11,7 +11,7 @@ class MovieingOn < Sinatra::Base
 
     def authorized?
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', '7qxbxwm4tDjT4T']
+      @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', ENV['ADMIN_PASSWORD']]
     end
   end
 
