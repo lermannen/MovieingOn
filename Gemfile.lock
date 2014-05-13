@@ -7,6 +7,9 @@ GEM
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     coderay (1.1.0)
+    dotenv (0.11.1)
+      dotenv-deployment (~> 0.0.2)
+    dotenv-deployment (0.0.2)
     ffi (1.9.3)
     formatador (0.2.4)
     guard (2.6.1)
@@ -56,6 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dotenv
   guard
   guard-rackup
   pg

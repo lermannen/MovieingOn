@@ -9,3 +9,4 @@ test.rb
 
 bin/
 *.sublime*
+.env
