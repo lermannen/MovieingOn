@@ -62,7 +62,7 @@ class MovieingOn < Sinatra::Base
 
   get '/actors' do
     @people = get_top_list('actor')
-    @title = ''
+    @title = 'Our Actors'
     @header = 'The following actors have acted more than one movie:'
     @moviecount = Movie.count
     erb :people
@@ -70,7 +70,7 @@ class MovieingOn < Sinatra::Base
 
   get '/directors' do
     @people = get_top_list('director')
-    @title = ''
+    @title = 'Our directors'
     @header = 'The following directors have directed more than one movie:'
     @moviecount = Movie.count
     erb :people
@@ -78,7 +78,7 @@ class MovieingOn < Sinatra::Base
 
   get '/writers' do
     @people = get_top_list('writer')
-    @title = ''
+    @title = 'Our writers'
     @header = 'The following writers have written more than one movie:'
     @moviecount = Movie.count
     erb :people
@@ -88,13 +88,14 @@ class MovieingOn < Sinatra::Base
     @movies = Movie.select_map([:movieingonrating, :title, :year, :poster_url, :moviedb_id])
       .sort.reverse
     @title = 'Our ratings'
+    @header = 'Here are how we rated the movies we covered!'
     @moviecount = Movie.count
     erb :rated
   end
 
   get '/studios' do
-    @title = "Our productioncompanies"
-    @header = 'Here are the various productioncompanies we have covered:'
+    @title = "Our production companies"
+    @header = 'Here are the various production companies we have covered:'
     productioncompanies = Hash.new(0)
     Productioncompany.all.each do |studio|
       productioncompanies[studio.name] = studio.movies.count
