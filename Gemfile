@@ -4,7 +4,10 @@ gem 'sinatra'
 gem 'sequel'
 gem 'pg'
 gem 'themoviedb'
+gem 'newrelic_rpm'
+
+group :development do
 gem 'guard'
 gem 'guard-rackup'
 gem 'dotenv'
-gem 'newrelic_rpm'
+end

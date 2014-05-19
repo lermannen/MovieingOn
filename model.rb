@@ -1,14 +1,5 @@
 require 'sequel'
 
-if settings.environment != :production
-  require 'dotenv'
-  Dotenv.load
-end
-
-configure :production do
-  require 'newrelic_rpm'
-end
-
 DB = Sequel.connect(ENV['DATABASE_URL'])
 
 class Person < Sequel::Model(:persons)
