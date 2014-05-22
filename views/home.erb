@@ -18,17 +18,17 @@
   </tr>
   <tr>
     <td><span class="glyphicon glyphicon-calendar"></span> Top year(s)</td>
-    <td><%= @year[:year] %></td>
+    <td><a href="/year/<%= @year[:year] %>"><%= @year[:year] %></a></td>
     <td><%= @year[:count] %></td>
   </tr>
   <tr class="success">
     <td><span class="glyphicon glyphicon-thumbs-up"></span> Top rated movie(s)</td>
-    <td><em><%= @top_rated.map { |movie| movie[:title]}.sort.join(", ") %></em></td>
+    <td><em><%= @top_rated.map { |movie| "<a href=\"movie\\#{movie[:moviedb_id]}\">#{movie[:title]}</a>"}.sort.join(", ") %></em></td>
     <td><%= @top_rating %></td>
   </tr>
   <tr class="danger">
     <td><span class="glyphicon glyphicon-thumbs-down"></span> Lowest rated movie(s)</td>
-    <td><em><%= @low_rated[:title] %></em></td>
-    <td><%= @low_rated[:movieingonrating]%></td>
+    <td><em><%= @low_rated.map { |movie| "<a href=\"movie\\#{movie[:moviedb_id]}\">#{movie[:title]}</a>"}.sort.join(", ") %></em></td>
+    <td><%= @low_rating%></td>
   </tr>
 </table>

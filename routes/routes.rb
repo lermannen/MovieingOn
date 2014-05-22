@@ -37,16 +37,17 @@ class MovieingOn < Sinatra::Base
 
     @production_company = DB[:movie_productioncompany___mpc]
       .join(:productioncompanies___p, id: :productioncompany_id)
-      .group_and_count(:p__name)
+      .group_and_count(:p__name, :p__moviedb_id)
       .having{count(:*){} >= production_company_max}
       .all
-      .map { |production_company| production_company[:name] }.sort.join(', ')
+      .map { |production_company| "<a href=\"studio\\#{production_company[:name]}\">#{production_company[:name]}</a>" }.sort.join(', ')
 
     @production_company_max = production_company_max
     @year = Movie.group_and_count(:year).order(:count).last
     @top_rating = Movie.max(:movieingonrating)
     @top_rated = Movie.where(movieingonrating: @top_rating).all
-    @low_rated = Movie.order(:movieingonrating).first
+    @low_rating = Movie.min(:movieingonrating)
+    @low_rated = Movie.where(movieingonrating: @low_rating).all
 
     @actors = get_top_list('actor')
     @title = ''
