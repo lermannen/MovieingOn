@@ -14,7 +14,7 @@
 # reload proc that fired when watched files changed
 #   :reload => proc{ stop; start },
 guard "rackup" do
-  watch('movieingon.rb')
+  watch(%r{^(.+)\.rb$})
   watch(%r{^app/.*\.rb$})
   watch(%r{^lib/.*\.rb$})
   watch(%r{^config/.*\.rb$})
