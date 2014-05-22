@@ -24,7 +24,7 @@ class MovieingOn < Sinatra::Base
     Person.all.each do |p|
       movie_list = p.movies_dataset.where(job: job).all
       persons[movie_list.count] << {
-        name: p.name,
+        name: "<a href=\"person\\#{p.moviedb_id}\">#{p.name}</a>",
         movies: movie_list.map { |m| "<a href=\"movie\\#{m.moviedb_id}\">#{m.title}</a>" }.sort.join(', ')
       } unless movie_list.count <= 1
     end
