@@ -104,6 +104,13 @@ class MovieingOn < Sinatra::Base
     erb :countstudios
   end
 
+  get '/studio/:studio' do |studio|
+    @movies = Movie.select_all(:movies).join_table(:inner, :movie_productioncompany, :movie_id => :id).join(Productioncompany.where{Sequel.like(:name, studio)}, :id => :productioncompany_id).all
+    @moviecount = Movie.count
+    @title = studio
+    erb :movielist
+  end
+
   get '/years' do
     @title = "Our years"
     @header = 'Here are the various years we have covered:'
@@ -124,6 +131,13 @@ class MovieingOn < Sinatra::Base
     end
     @genres = genres.sort_by { |_key, value | value }.reverse
     erb :countgenres
+  end
+
+  get '/genre/:genre' do |genre|
+    @movies = Movie.select_all(:movies).join_table(:inner, :movie_genre, :movie_id => :id).join(Genre.where{Sequel.like(:name, genre)}, :id => :genre_id).all
+    @moviecount = Movie.count
+    @title = genre
+    erb :movielist
   end
 
   get '/year/:year' do |year|
