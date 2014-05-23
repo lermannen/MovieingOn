@@ -9,17 +9,31 @@ class MovieingOn < Sinatra::Base
   end
 
   get '/movie/:movie_id' do |movie_id|
+    persons = Hash.new { |h, k| h[k] = [] }
+    Person_info = Struct.new(:moviedb_id, :name)
+
+    Movie[moviedb_id: movie_id].crew.each do |g|
+      persons[Person_info.new(g.moviedb_id, g.name)] << g[:job]
+    end
+
     @movie = Movie[moviedb_id: movie_id]
     @title = @movie.title
-    @actors = Movie[moviedb_id: movie_id].crew
+    @actors = persons.sort_by { |key, _value | key.name }
     @moviecount = Movie.count
     erb :episode
   end
 
   get '/episode/:episode' do |episode|
+    persons = Hash.new { |h, k| h[k] = [] }
+    Person_info = Struct.new(:moviedb_id, :name)
+
+    Movie[moviedb_id: movie_id].crew.each do |g|
+      persons[Person_info.new(g.moviedb_id, g.name)] << g[:job]
+    end
+
     @movie = Movie[episode: episode]
     @title = @movie.title
-    @actors = Movie[episode: episode].crew
+    @actors = persons
     @moviecount = Movie.count
     erb :episode
   end

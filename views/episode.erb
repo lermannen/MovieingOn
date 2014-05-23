@@ -14,9 +14,9 @@
   <div class="col-sm-9">
     <p><em><%= @movie.title %></em> is a <%= @movie.genres.map{ |m| m.name.downcase }.join(' ') %> movie from <a href="/year/<%= @movie.year %>"><%= @movie.year %></a>. The Movieing On crew rated it <%= @movie.movieingonrating %> of 10. The production companies involved were: <%= @movie.productioncompanies.map{ |m| m.name }.join(', ') %>.</p>
     <table class="table table-hover">
-      <% @actors.each do |actor| %>
+      <% @actors.each do |key, value| %>
       <tr>
-        <td><a href="/person/<%= actor.moviedb_id %>"><%= actor.name %></a> <small>[<%= actor[:job] %>]</small></td>
+        <td><a href="/person/<%= key.moviedb_id %>"><%= key.name %></a> <small>[<%= value.sort.join(", ") %>]</small></td>
       </tr>
     <% end %></table>
   </div>
