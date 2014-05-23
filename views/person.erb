@@ -1,6 +1,8 @@
 <div class="row">
   <div class="col-sm-3">
-    <img src="<%= @person.profile_url %>" class="img-thumbnail">
+    <% if @person.profile_url %>
+      <img src="<%= @person.profile_url %>" class="img-thumbnail">
+    <% end %>
     <div class="text-center"><h4><%= @person.name %></div></h4>
   </div>
 
