@@ -7,7 +7,7 @@ class TheMovieDB
 
   def initialize
     @config = Tmdb::Configuration.new
-    Tmdb::Api.key('f6343dcd785009de63b392bc4ac98e89')
+    Tmdb::Api.key(ENV['THEMOVIEDAPIKEY'])
   end
 
   def base_url
