@@ -27,7 +27,7 @@ class MovieingOn < Sinatra::Base
     persons = Hash.new { |h, k| h[k] = [] }
     Person_info = Struct.new(:moviedb_id, :name)
 
-    Movie[moviedb_id: movie_id].crew.each do |g|
+    Movie[episode: episode].crew.each do |g|
       persons[Person_info.new(g.moviedb_id, g.name)] << g[:job]
     end
 
