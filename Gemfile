@@ -6,8 +6,10 @@ gem 'pg'
 gem 'themoviedb'
 gem 'newrelic_rpm'
 
-group :development do
-gem 'guard'
-gem 'guard-rackup'
-gem 'dotenv'
+group :test, :development do
+  gem "rspec"
+  gem 'guard'
+	gem 'guard-rackup'
+	gem 'dotenv'
+	gem "rack-test"
 end

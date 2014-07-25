@@ -5,7 +5,7 @@ require 'rack/test'
 require 'dotenv'
 Dotenv.load
 
-require_relative 'movieingon'
+require_relative '../movieingon'
 
 class ApplicationTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
