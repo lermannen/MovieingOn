@@ -1,9 +1,9 @@
 require "feature_spec_helper"
 
-RSpec.describe "adding actors", feature: true do
-
-  specify "add actor when person exists" do
-    expect(db[:movies]).to be_empty
+RSpec.describe "adding crew", feature: true do
+	
+  specify "add crew when person exists" do
+		expect(db[:movies]).to be_empty
     expect(db[:persons]).to be_empty
 
     # Add movie and person
@@ -17,25 +17,25 @@ RSpec.describe "adding actors", feature: true do
       episode: 1)
 
     person_id = DB[:persons].insert(
-      name: "Test Actor",
+      name: "Test Crew",
       moviedb_id: 100,
       profile_url: "http://")
     
-    # Add actor
-    actor = {name: "Test Actor", id: 100, profile_url: "http://", job: :actor}
+    # Add person
+    person = {name: "Test Crew", id: 100, profile_url: "http://", job: :writer}
     helper = MovieHelper.new
-    helper.add_crewman(actor, movie_id)
+    helper.add_crewman(person, movie_id)
 
     # Ensure that the end state is valid
     expect(db[:persons].all.length).to eq(1)
-  end
+    expect(db[:crew].all.length).to eq(1)
+	end
 
-  specify "add actor when person does not exists" do
+  specify "add crew when person does not exists" do
     expect(db[:movies]).to be_empty
     expect(db[:persons]).to be_empty
 
     # Add movie
-    # Add movie and person
     movie_id = DB[:movies].insert(
       moviedb_id: 4711,
       title: "Test movie",
@@ -45,13 +45,14 @@ RSpec.describe "adding actors", feature: true do
       imdbrating: 1,
       episode: 1)
     
-    # Add actor
-    actor = {name: "Test Actor", id: 100, profile_url: "http://", job: :actor}
+    # Add person
+    person = {name: "Test Crew", id: 100, profile_url: "http://", job: :director}
     helper = MovieHelper.new
-    helper.add_crewman(actor, movie_id)
+    helper.add_crewman(person, movie_id)
 
     # Ensure that the end state is valid
     expect(db[:persons].all.length).to eq(1)
+    expect(db[:crew].all.length).to eq(1)
   end
 
 end

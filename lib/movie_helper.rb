@@ -7,17 +7,19 @@ class MovieHelper
 		@themoviedb = TheMovieDBSupport.new
 	end
 
-	def add_actor(actor, movie_id)
-    person = Person.first(moviedb_id: actor[:id])
+  def add_crewman(crewman, movie_id)
+    person = Person.where(moviedb_id: crewman[:id]).first
     person_id = person.id if person
     
     person_id = DB[:persons].insert(
-      name: actor[:name],
-      moviedb_id: actor[:id],
-      profile_url: actor[:profile_path]
-    ) unless person
+      name: crewman[:name],
+      moviedb_id: crewman[:id],
+      profile_url: crewman[:profile_path]) unless person
     
-    DB[:crew].insert(person_id: person_id, movie_id: movie_id, job: 'actor')
+    DB[:crew].insert(
+      person_id: person_id,
+      movie_id: movie_id,
+      job: crewman[:job].to_s)
   end
 
   def add_production_company(created_movie_id, company)
@@ -51,30 +53,15 @@ class MovieHelper
     actors = themoviedb.actors(moviedb_id)
 
     actors.each do |actor|
-      add_actor(actor, movie_id)
+      actor[:job] = :actor
+      add_crewman(actor, movie_id)
     end
   end
 
   def add_crew(moviedb_id, movie_id)
     crew = themoviedb.crew(moviedb_id)
     crew.each do |crewman|
-      person = Person.where(moviedb_id: crewman.id).first
-      if person
-        DB[:crew].insert(
-          person_id: person.id,
-          movie_id: movie_id,
-          job: crewman.job.to_s)
-      else
-        person_id = DB[:persons].insert(
-          name: crewman.name,
-          moviedb_id: crewman.id,
-          profile_url: crewman.profile_path)
-        
-        DB[:crew].insert(
-          person_id: person_id,
-          movie_id: movie_id,
-          job: crewman.job.to_s)
-      end
+      add_crewman(crewman, movie_id)
     end
   end
 
@@ -91,7 +78,7 @@ class MovieHelper
         created_movie_id = Movie.create do |m|
           m.moviedb_id = movie.id
           m.title = movie.title
-          m.year = movie.release_date.slice(0..3)
+          m.year = movie.release_date.slice(0..3) if movie.release_date
           m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
           m.movieingonrating = movieingonrating
           m.imdbrating = imdbrating
