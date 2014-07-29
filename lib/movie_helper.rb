@@ -67,7 +67,10 @@ class MovieHelper
 
   def add_movie_to_database(movie_id, movieingonrating, imdbrating, episode)
     movie = themoviedb.movie_details(movie_id)
-
+    puts "------------------------- DEBUG --------------"
+    p movie
+    puts "#{movie.release_date} #{movie.title}"
+    puts "----------------------------------------------"
     if movie
       current_movie = Movie.filter(moviedb_id: movie.id).first
       fetched_movie_id = current_movie[:moviedb_id] unless current_movie.nil?
