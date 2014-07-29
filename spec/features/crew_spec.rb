@@ -24,7 +24,7 @@ RSpec.describe "adding crew", feature: true do
     # Add person
     person = {name: "Test Crew", id: 100, profile_path: "http://", job: :writer}
     helper = MovieHelper.new
-    person_id = helper.add_crewman(person, movie_id)
+    helper.add_crewman(person, movie_id)
 
     # Ensure that the end state is valid
     expect(db[:persons].all.length).to eq(1)

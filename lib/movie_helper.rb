@@ -24,16 +24,20 @@ class MovieHelper
     person_id
   end
 
-  def add_production_company(created_movie_id, company)
-    prodco = Productioncompany.first(moviedb_id: company['id'])
-    if prodco
-      created_movie_id.add_productioncompany(prodco[:id])
-    else
-      created_movie_id.add_productioncompany(
-        name: company['name'],
-        moviedb_id: company['id']
+  def add_production_company(company, movie_id)
+    production_company = Productioncompany.first(moviedb_id: company[:id])
+    production_company_id = production_company.id if production_company
+    
+    production_company_id = DB[:productioncompanies].insert(
+      name: company[:name],
+      moviedb_id: company[:id]) unless production_company
+        
+    DB[:movie_productioncompany].insert(
+      movie_id: movie_id,
+      productioncompany_id: production_company_id
       )
-    end
+
+    production_company_id    
   end
 
   def add_genre(genre, movie_id)
