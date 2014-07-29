@@ -7,10 +7,12 @@ gem 'themoviedb'
 gem 'newrelic_rpm'
 
 group :test, :development do
+	gem "rake"
   gem "rspec"
   gem 'guard'
 	gem 'guard-rackup'
 	gem 'dotenv'
 	gem "rack-test"
 	gem "database_cleaner"
+	gem "codeclimate-test-reporter", group: :test, require: nil
 end

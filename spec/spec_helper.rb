@@ -4,6 +4,8 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 ENV["DATABASE_URL"] = "postgres://akorling@localhost:5432/movieingon_test"
 

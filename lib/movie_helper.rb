@@ -8,7 +8,7 @@ class MovieHelper
 	end
 
   def add_crewman(crewman, movie_id)
-    person = Person.where(moviedb_id: crewman[:id]).first
+    person = Person.first(moviedb_id: crewman[:id])
     person_id = person.id if person
     
     person_id = DB[:persons].insert(
@@ -25,7 +25,7 @@ class MovieHelper
   end
 
   def add_production_company(created_movie_id, company)
-    prodco = Productioncompany.where(moviedb_id: company['id']).first
+    prodco = Productioncompany.first(moviedb_id: company['id'])
     if prodco
       created_movie_id.add_productioncompany(prodco[:id])
     else
@@ -71,7 +71,7 @@ class MovieHelper
     movie = themoviedb.movie_details(movie_id)
 
     if movie
-      current_movie = Movie.filter(moviedb_id: movie.id).first
+      current_movie = Movie.first(moviedb_id: movie.id)
       fetched_movie_id = current_movie[:moviedb_id] unless current_movie.nil?
     end
 
