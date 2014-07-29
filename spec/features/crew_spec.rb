@@ -22,13 +22,25 @@ RSpec.describe "adding crew", feature: true do
       profile_url: "http://")
     
     # Add person
-    person = {name: "Test Crew", id: 100, profile_url: "http://", job: :writer}
+    person = {name: "Test Crew", id: 100, profile_path: "http://", job: :writer}
     helper = MovieHelper.new
-    helper.add_crewman(person, movie_id)
+    person_id = helper.add_crewman(person, movie_id)
 
     # Ensure that the end state is valid
     expect(db[:persons].all.length).to eq(1)
     expect(db[:crew].all.length).to eq(1)
+
+    db[:persons].all.should include(
+      id: person_id,
+      name: "Test Crew",
+      moviedb_id: 100, 
+      profile_url: "http://"
+    )
+
+    db[:crew].all.should include(
+      movie_id: movie_id,
+      person_id: person_id,
+      job: "writer")
 	end
 
   specify "add crew when person does not exists" do
@@ -46,13 +58,25 @@ RSpec.describe "adding crew", feature: true do
       episode: 1)
     
     # Add person
-    person = {name: "Test Crew", id: 100, profile_url: "http://", job: :director}
+    person = {name: "Test Crew", id: 100, profile_path: "http://", job: :director}
     helper = MovieHelper.new
-    helper.add_crewman(person, movie_id)
+    person_id = helper.add_crewman(person, movie_id)
 
     # Ensure that the end state is valid
     expect(db[:persons].all.length).to eq(1)
     expect(db[:crew].all.length).to eq(1)
+
+    db[:persons].all.should include(
+      id: person_id,
+      name: "Test Crew",
+      moviedb_id: 100, 
+      profile_url: "http://"
+    )
+
+    db[:crew].all.should include(
+      movie_id: movie_id,
+      person_id: person_id,
+      job: "director")
   end
 
 end

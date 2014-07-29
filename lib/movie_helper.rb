@@ -20,6 +20,8 @@ class MovieHelper
       person_id: person_id,
       movie_id: movie_id,
       job: crewman[:job].to_s)
+
+    person_id
   end
 
   def add_production_company(created_movie_id, company)
@@ -67,7 +69,7 @@ class MovieHelper
 
   def add_movie_to_database(movie_id, movieingonrating, imdbrating, episode)
     movie = themoviedb.movie_details(movie_id)
-    
+
     if movie
       current_movie = Movie.filter(moviedb_id: movie.id).first
       fetched_movie_id = current_movie[:moviedb_id] unless current_movie.nil?
@@ -78,7 +80,7 @@ class MovieHelper
         created_movie_id = Movie.create do |m|
           m.moviedb_id = movie.id
           m.title = movie.title
-          m.year = movie.release_date.slice(0..3) if movie.release_date
+          m.year = movie.release_date.slice(0..3)
           m.imdburl = "http://www.imdb.com/title/#{movie.imdb_id}"
           m.movieingonrating = movieingonrating
           m.imdbrating = imdbrating
