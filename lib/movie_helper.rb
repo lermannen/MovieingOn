@@ -8,12 +8,12 @@ class MovieHelper
 	end
 
 	def add_actor(actor, movie_id)
-    person = Person.first(moviedb_id: actor[:moviedb_id])
+    person = Person.first(moviedb_id: actor[:id])
     person_id = person.id if person
     
     person_id = DB[:persons].insert(
       name: actor[:name],
-      moviedb_id: actor[:moviedb_id],
+      moviedb_id: actor[:id],
       profile_url: actor[:profile_path]
     ) unless person
     
@@ -36,9 +36,6 @@ class MovieHelper
     genre_obj = Genre.first(moviedb_id: genre[:id])
     genre_id = genre_obj.id if genre_obj
 
-    p genre
-    p genre_obj
-
     genre_id = DB[:genres].insert(
       name: genre[:name],
       moviedb_id: genre[:id]
@@ -51,33 +48,31 @@ class MovieHelper
   end
 
   def add_cast(moviedb_id, movie_id)
-    actors = themoviedb.actors(movie_id)
+    actors = themoviedb.actors(moviedb_id)
 
     actors.each do |actor|
       add_actor(actor, movie_id)
     end
   end
 
-  def add_crew(movie_id, created_movie_id)
-    crew = themoviedb.crew(movie_id)
+  def add_crew(moviedb_id, movie_id)
+    crew = themoviedb.crew(moviedb_id)
     crew.each do |crewman|
       person = Person.where(moviedb_id: crewman.id).first
       if person
-        ds = DB[:crew]
-        ds.insert(
+        DB[:crew].insert(
           person_id: person.id,
-          movie_id: created_movie_id.id,
+          movie_id: movie_id,
           job: crewman.job.to_s)
       else
-        ds = DB[:persons]
-        person_id = ds.insert(
+        person_id = DB[:persons].insert(
           name: crewman.name,
           moviedb_id: crewman.id,
           profile_url: crewman.profile_path)
-        ds = DB[:crew]
-        ds.insert(
+        
+        DB[:crew].insert(
           person_id: person_id,
-          movie_id: created_movie_id.id,
+          movie_id: movie_id,
           job: crewman.job.to_s)
       end
     end
@@ -109,12 +104,12 @@ class MovieHelper
         end
 
         movie.genres.each do |genre|
-          g = genre.inject({}){|new_hash,(key, value)| new_hash[key.to_sym] = value; memo}
+          g = genre.inject({}){|new_hash,(key, value)| new_hash[key.to_sym] = value; new_hash}
           add_genre(g, created_movie_id[:id])
         end
 
-        add_cast(movie_id, created_movie_id)
-        add_crew(movie_id, created_movie_id)
+        add_cast(movie_id, created_movie_id[:id])
+        add_crew(movie_id, created_movie_id[:id])
 
       end
     end

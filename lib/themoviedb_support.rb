@@ -2,7 +2,7 @@ require 'themoviedb'
 require 'set'
 
 # Wrapper for themoviedb gem.
-class TheMovieDB
+class TheMovieDBSupport
   attr_reader :config
 
   def initialize

@@ -1,4 +1,5 @@
 require 'sinatra'
+require_relative "../lib/movie_helper"
 
 # Routes for genres.
 class MovieingOn < Sinatra::Base
@@ -10,8 +11,9 @@ class MovieingOn < Sinatra::Base
     erb :admin
   end
 
-  post '/' do
-    add_movie_to_database(
+  post '/admin' do
+    movie_helper = MovieHelper.new
+    movie_helper.add_movie_to_database(
       params[:movie_id],
       params[:movieingonrating],
       params[:imdbrating],

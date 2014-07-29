@@ -22,7 +22,7 @@ RSpec.describe "adding actors", feature: true do
       profile_url: "http://")
     
     # Add actor
-    actor = {name: "Test Actor", moviedb_id: 100, profile_url: "http://"}
+    actor = {name: "Test Actor", id: 100, profile_url: "http://"}
     helper = MovieHelper.new
     helper.add_actor(actor, movie_id)
 
@@ -46,7 +46,7 @@ RSpec.describe "adding actors", feature: true do
       episode: 1)
     
     # Add actor
-    actor = {name: "Test Actor", moviedb_id: 100, profile_url: "http://"}
+    actor = {name: "Test Actor", id: 100, profile_url: "http://"}
     helper = MovieHelper.new
     helper.add_actor(actor, movie_id)
 
