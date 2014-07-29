@@ -12,4 +12,5 @@ group :test, :development do
 	gem 'guard-rackup'
 	gem 'dotenv'
 	gem "rack-test"
+	gem "database_cleaner"
 end
