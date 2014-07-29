@@ -4,6 +4,9 @@
 # loaded once.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+ENV["DATABASE_URL"] = "postgres://akorling@localhost:5432/movieingon_test"
+
 require File.expand_path("../../environment", __FILE__)
 
 RSpec.configure do |config|

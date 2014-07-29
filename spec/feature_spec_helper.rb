@@ -8,6 +8,8 @@ require "db"
 require "rack/test"
 
 require_relative "../movieingon"
+require_relative "support/database_cleaner"
+require_relative "../lib/movie_helper"
 
 module DbSpecHelpers
   attr_accessor :db

@@ -13,6 +13,7 @@ RSpec.describe "happy path", feature: true do
 		expect(db[:movies]).to be_empty
 		expect(db[:persons]).to be_empty
 		
+		pending "not implemented."
 		# fetch movie data (mock) (vcr?)
 		# add movie
 		# ensure end result
